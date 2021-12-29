@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="role">
+	<resultMap type="com.createTemplate.model.admin.system.pojo.Role" id="role"></resultMap>
+	<resultMap type="com.createTemplate.model.admin.system.vo.RoleVo" id="roleVo"></resultMap>
+	<parameterMap type="com.createTemplate.model.admin.system.pojo.Role" id="role"></parameterMap>
+	<parameterMap type="com.createTemplate.model.admin.system.vo.RoleVo" id="roleVo"></parameterMap>
+	
+	<resultMap type="com.createTemplate.model.admin.system.pojo.Button" id="button"></resultMap>
+	<resultMap type="com.createTemplate.model.admin.system.vo.ButtonVo" id="buttonVo"></resultMap>
+	<parameterMap type="com.createTemplate.model.admin.system.pojo.Button" id="button"></parameterMap>
+	<parameterMap type="com.createTemplate.model.admin.system.vo.ButtonVo" id="buttonVo"></parameterMap>
+	
+	<resultMap type="com.createTemplate.model.admin.system.pojo.Menu" id="menu"></resultMap>
+	<resultMap type="com.createTemplate.model.admin.system.vo.MenuVo" id="menuVo"></resultMap>
+	
+	<resultMap type="com.createTemplate.model.admin.system.pojo.RoleMenu" id="roleMenu"></resultMap>
+	<resultMap type="com.createTemplate.model.admin.system.vo.RoleMenuVo" id="roleMenuVo"></resultMap>
+	<parameterMap type="com.createTemplate.model.admin.system.pojo.RoleMenu" id="roleMenu"></parameterMap>
+	<parameterMap type="com.createTemplate.model.admin.system.vo.RoleMenuVo" id="roleMenuVo"></parameterMap>
+	<parameterMap type="java.util.HashMap" id="map"></parameterMap>
+	<resultMap type="java.util.HashMap" id="map"></resultMap>
+	
+	<!-- 分页查询角色-->
+	<select id="getRolePage" resultMap="role" parameterMap="roleVo" >
+	    select ${column} from T_ROLE
+	    where 1=1  
+	    <if test="null!= roleName and '' != roleName">
+	    	and role_name like CONCAT('%',#{roleName},'%')
+		</if>
+		<if test="null!= status" >
+	    	and status = #{status}
+		</if>
+	</select>
+	
+	<!-- 查询角色 -->
+	<select id="findRoleByRoleName" resultMap="role" parameterMap="roleVo" >
+	    select ${column} from T_ROLE
+	    where role_name = #{roleName}
+	</select>
+	
+	<!-- 删除角色 -->
+	<delete id="deleteRoleById" parameterMap="roleVo" >
+	    delete from T_ROLE
+	    where  id in(${ids})
+	</delete>
+	
+	<!-- 更新角色 -->
+	<update id="updateRole" parameterMap="role" >
+		update T_ROLE set role_name = #{roleName}, status = #{status} , remark = #{remark} where id = #{id}
+	</update>
+	
+	<!-- 查询按钮 -->
+	<select id="findButton" resultMap="button" parameterMap="buttonVo" >
+	    select ${column} from T_BUTTON
+	</select>
+
+	<!-- 查询权限 -->
+	<select id="findMenuByRoleId" resultMap="map" parameterMap="role">
+		<!-- select m.*,case when rm.id is null then '0' else '1' end selected,rm.button_ename from (
+			select * from T_ROLE_MENU rm where rm.role_id = #{id}
+		)rm right join T_MENU m on rm.menu_id = m.id where m.status=0 -->
+		
+		select * from (
+		select m.*,case when rm.id is null then 0 else 1 end selected,rm.button_ename,IFNULL(pm.status,0) as parent_status
+		from  T_MENU m 
+		left join T_MENU pm on pm.id=m.parent_id 
+		left join  T_ROLE_MENU rm on rm.menu_id = m.id and rm.role_id=#{id}
+		where m.status=0) t where parent_status=0
+	</select>
+	
+	<!-- 查询角色id列表权限 -->
+	<select id="findRoleMenuByRoleIds" resultMap="roleMenu" parameterMap="roleVo">
+		select ${column}  from T_ROLE_MENU rm 
+		inner join T_MENU m  on rm.menu_id = m.id
+		where m.status=0 and rm.role_id in 
+		<foreach collection="roleIds" index="index" item="item" open="(" separator="," close=")">
+               #{item}       
+       </foreach> 
+        group by rm.id
+	</select>
+	
+	<!-- 根据角色id列表查询菜单列表 -->
+	<select id="findMenuListByRoleIds" resultMap="menu" parameterMap="roleVo">
+		select ${column}  from T_MENU  m
+		inner join T_ROLE_MENU  rm on rm.menu_id = m.id
+		where m.status=0 and rm.role_id in 
+		<foreach collection="roleIds" index="index" item="item" open="(" separator="," close=")">
+               #{item}       
+       </foreach> 
+        group by m.id order by m.sort
+	</select>
+	
+	<!-- 查询所有角色 -->
+	<select id="findAllRole" resultMap="role" parameterMap="roleVo">
+		select ${column} from T_ROLE where status=0
+	</select>
+	
+	<!-- 删除roleMenu表数据 -->
+	<delete id="deleteRoleMenu" parameterMap="roleMenuVo" >
+		delete from T_ROLE_MENU where role_id= #{roleId}
+	</delete>
+	
+		
+	<!-- 查询roleMenu表数据 -->
+	<select id="findRoleMenuByRoleId" parameterMap="roleMenuVo" resultMap="roleMenuVo" >
+		select ${column} from T_ROLE_MENU where role_id= #{roleId}
+	</select>
+	
+	<!-- 根据roleId 查询 父层-->
+	<select id="findParentByRoleId" resultMap="menuVo" parameterMap="roleMenuVo" >
+	    select tm.id,tm.level,tm.url,tm.icon_cls,tm.menu_cname,tm.menu_ename ,tm.parent_id  from T_MENU tm 
+		where tm.id in (select DISTINCT tm.parent_id
+			from T_MENU tm
+			left join T_ROLE_MENU trm on tm.menu_ename = trm.menu_ename
+			where trm.role_id = #{roleId} and tm.level = 2) and tm.status=0 order by tm.sort
+	</select>
+	<!-- 根据roleId 查询 子层-->
+	<select id="findSonByRoleId" resultMap="menuVo" parameterMap="roleMenuVo" >
+	    select tm.id,tm.level,tm.url,tm.icon_cls,tm.menu_cname,tm.menu_ename ,tm.parent_id ,trm.button_ename
+			from T_MENU tm 
+			right join T_ROLE_MENU trm on tm.menu_ename = trm.menu_ename
+			where trm.role_id = #{roleId} and tm.level = 2 and tm.status=0 order by tm.sort
+	</select>
+</mapper>

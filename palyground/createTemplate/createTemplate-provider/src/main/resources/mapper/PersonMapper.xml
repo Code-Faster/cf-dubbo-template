@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="person">
+	<resultMap type="com.createTemplate.model.core.pojo.TPerson" id="person"></resultMap>
+	<resultMap type="com.createTemplate.model.core.vo.TPersonVO" id="personVo"></resultMap>
+	<resultMap type="com.createTemplate.model.core.pojo.TRechargeOrder" id="tRechargeOrder"/>
+
+	<parameterMap type="com.createTemplate.model.core.pojo.TPerson" id="person"></parameterMap>
+	<parameterMap type="com.createTemplate.model.core.vo.TPersonVO" id="personVo"></parameterMap>
+	<parameterMap type="java.util.HashMap" id="map"></parameterMap>
+	<parameterMap type="java.util.Set" id="set"></parameterMap>
+	<!-- 根据手机号查询用户信息 -->
+	<!-- 根据手机号查询用户信息 -->
+	<select id="findPersonByMobile" resultMap="personVo"
+			parameterMap="personVo">
+		SELECT
+		${column}
+		FROM
+		T_PERSON p where p.phone_num = #{phoneNum}
+	</select>
+
+	<!-- 根据ID查询用户信息 -->
+	<select id="findById" resultMap="person" parameterMap="map">
+		SELECT ${column} FROM T_PERSON
+		where id = #{id}
+	</select>
+
+	<select id="findByIds" resultMap="person" parameterMap="map">
+		SELECT ${column} FROM T_PERSON
+		where
+		<foreach collection="ids" item="item" open="id in  (" close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
+
+	<!-- 分页查询-admin使用 -->
+	<select id="findPersonPage" resultMap="personVo" parameterMap="personVo">
+		SELECT ${column} FROM
+		T_PERSON p where 1=1
+		<if test="null != phoneNum and '' != phoneNum">
+			and phone_num like '%${phoneNum}%'
+		</if>
+		<if test="null != aliasName and '' != aliasName">
+			and alias_name like '%${aliasName}%'
+		</if>
+		order by id asc
+	</select>
+
+	<!-- 根据ID查询用户详情 -->
+	<select id="findPersonDetailById" resultMap="personVo" parameterMap="map">
+		SELECT ${column} FROM T_PERSON
+		where id = #{id}
+	</select>
+
+
+	<select id="findPersonByAppId" resultMap="personVo" parameterMap="map">
+		SELECT ${column} FROM T_PERSON p
+		where p.app_id = #{appId}
+	</select>
+
+	<!-- 总余额 -->
+	<select id="queryPersonSurplusMoeny" resultType="int" parameterType="java.lang.Long">
+		select queryPersonSurplusMoeny(#{personId},NOW());
+	</select>
+	<!-- 冻结余额 -->
+	<select id="queryPersonFreezonSurplusMoeny" resultType="int" parameterType="java.lang.Long">
+		select queryPersonFreezonSurplusMoeny(#{personId},NOW());
+	</select>
+	<!-- 可用余额 -->
+	<select id="queryPersonFreeSurplusMoeny" resultType="int" parameterType="java.lang.Long">
+		select queryPersonFreeSurplusMoeny(#{personId},NOW());
+	</select>
+
+	<select id="findTRechargeOrder" resultMap="tRechargeOrder" parameterMap="map">
+		select ${column}
+		from T_RECHARGE_ORDER
+		where 1=1
+		<if test="null != personId ">
+			and person_id=#{personId}
+		</if>
+		<if test="null != id ">
+			and id=#{id}
+		</if>
+		<if test="null != orderNo ">
+			and order_no=#{orderNo}
+		</if>
+		<if test="null != status">
+			and status in (${status})
+		</if>
+		<if test="null != rechargeType">
+			and recharge_type=#{rechargeType}
+		</if>
+
+	</select>
+
+</mapper>
