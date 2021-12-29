@@ -4,13 +4,11 @@
 declare class CodeGenerator {
   constructor();
   static service: (
-    extendsPath: string,
     releasePath: string,
     pojo: string,
     vo: string,
     pojoName: string,
     author: string,
-    tableColArr: [],
     getPackageNameByFileName: (args: string) => string,
     getPackageName: (path: string, filter: string) => string
   ) => string;
@@ -48,13 +46,12 @@ declare class CodeGenerator {
     getPackageName: (path: string, filter: string) => string
   ) => string;
   static unitTest = (
+    projectName: string,
     extendsPath: string,
-    releasePath: string,
     pojo: string,
     vo: string,
     pojoName: string,
     author: string,
-    tableColArr: [],
     getPackageNameByFileName: (args: string) => string,
     getPackageName: (path: string, filter: string) => string
   ) => string;

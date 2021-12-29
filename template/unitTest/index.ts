@@ -10,7 +10,6 @@ const getParamVariableFormat = (str: string) => {
 export default function (
   projectName: string,
   extendsPath: string,
-  releasePath: string,
   pojo: string,
   vo: string,
   pojoName: string,
