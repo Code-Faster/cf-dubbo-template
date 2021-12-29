@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TAccountDetail">
+    <resultMap type="com.createTemplate.model.core.pojo.TAccountDetail" id="tAccountDetail"/>
+    <resultMap type="com.createTemplate.model.core.vo.TAccountDetailVO" id="tAccountDetailVO"/>
+    <resultMap type="java.util.HashMap" id="map"/>
+    <parameterMap type="com.createTemplate.model.core.pojo.TAccountDetail" id="tAccountDetail"/>
+    <parameterMap type="com.createTemplate.model.core.vo.TAccountDetailVO" id="tAccountDetailVO"/>
+    <parameterMap type="java.util.HashMap" id="map"/>
+
+    <!-- 根据ID查询表信息 create by 李必琪 -->
+    <select id="findById" resultMap="tAccountDetail" parameterMap="map">
+        SELECT * FROM T_ACCOUNT_DETAIL WHERE ID = #{id}
+    </select>
+
+    <!-- 根据ID查询用户详情 create by 李必琪 -->
+    <select id="findVOById" resultMap="tAccountDetailVO" parameterMap="map">
+        SELECT * FROM T_ACCOUNT_DETAIL WHERE ID = #{id}
+    </select>
+
+    <!-- 根据ID数组查询表信息 create by 李必琪 -->
+    <select id="findByIds" resultMap="tAccountDetail" parameterMap="map">
+        SELECT * FROM T_ACCOUNT_DETAIL WHERE
+        <foreach collection="ids" item="item" open="ID in  (" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <!-- 分页查询表 create by 李必琪 -->
+    <select id="findTAccountDetailPage" resultMap="tAccountDetailVO" parameterMap="tAccountDetailVO">
+        SELECT tad.*,tp.nick_name,tp.phone_num,tp.avatar_url
+        FROM T_ACCOUNT_DETAIL tad
+        INNER JOIN T_PERSON tp ON tp.id = tad.person_id
+        WHERE 1=1
+        <if test="personId != null">
+            and tad.person_id = #{personId}
+        </if>
+        ORDER BY tad.ID desc
+    </select>
+
+</mapper>

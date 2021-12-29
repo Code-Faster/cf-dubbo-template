@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="enum">
+    <resultMap type="com.createTemplate.model.base.pojo.EnumObj" id="enumObj"></resultMap>
+    <resultMap type="com.createTemplate.model.base.vo.EnumObjVo" id="enumObjVo"></resultMap>
+    <parameterMap type="com.createTemplate.model.base.pojo.EnumObj" id="enumObj"></parameterMap>
+    <parameterMap type="com.createTemplate.model.base.vo.EnumObjVo" id="enumObjVo"></parameterMap>
+    <!-- -->
+    <resultMap type="com.createTemplate.model.base.pojo.EnumType" id="enumType"></resultMap>
+    <resultMap type="com.createTemplate.model.base.vo.EnumTypeVo" id="enumTypeVo"></resultMap>
+    <parameterMap type="com.createTemplate.model.base.pojo.EnumType" id="enumType"></parameterMap>
+    <parameterMap type="com.createTemplate.model.base.vo.EnumTypeVo" id="enumTypeVo"></parameterMap>
+    <parameterMap type="java.util.HashMap" id="map"/>
+    <resultMap type="java.util.HashMap" id="map"></resultMap>
+
+    <!-- 根据id查询数据字典 -->
+    <select id="findEnumById" resultMap="enumObj" parameterMap="enumObjVo">
+        select ${column} from T_ENUMOBJ
+        where id = #{id}
+    </select>
+
+    <!-- 查询数据字典类型-->
+    <select id="findEnumType" resultMap="enumType">
+        select id,enum_type_name,remark,enum_type_code from T_ENUMTYPE
+        where 1=1
+        <if test="null!=enumTypeCode and '' != enumTypeCode">
+            and enum_type_code = #{enumTypeCode}
+        </if>
+        <if test="null!=enumTypeName and '' != enumTypeName">
+            and enum_type_name like CONCAT('%',#{enumTypeName},'%')
+        </if>
+    </select>
+
+    <!-- 查询数据字典 -->
+    <select id="findEnum" resultMap="enumObj" parameterMap="enumObjVo">
+        select ${column} from T_ENUMOBJ
+        where enum_type_code = #{enumTypeCode}
+        <if test="null!=id">
+            and id=#{id}
+        </if>
+        <if test="null!=enumTypeCode and enumTypeCode!=''">
+            and enum_type_code=#{enumTypeCode}
+        </if>
+        <if test="null!=upperId">
+            and upper_id=#{upperId}
+        </if>
+        <if test="null==upperId">
+            and upper_id is null
+        </if>
+        and status = #{status}
+        order by enum_type_code asc , sort_no asc
+    </select>
+
+    <!-- 分页查询数据字典 -->
+    <select id="findPage" resultMap="enumObjVo" parameterMap="enumObjVo">
+        SELECT
+        ${column},et.enum_type_name
+        FROM
+        T_ENUMOBJ e
+        inner join T_ENUMTYPE et on e.enum_type_id = et.id
+        where e.enum_type_id = et.id
+        <if test="null!= enumTypeCode and ''!=enumTypeCode">
+            and e.enum_type_code = #{enumTypeCode}
+        </if>
+        <if test="null!= enumValue and ''!= enumValue">
+            and e.enum_value=#{enumValue}
+        </if>
+        <if test="null!= status">
+            and e.status=#{status}
+        </if>
+        order by e.enum_type_id asc ,e.sort_no asc
+    </select>
+
+    <!-- 根据条件查询数据字典 -->
+    <select id="findEnumObjPage" resultMap="enumObj" parameterMap="enumObjVo">
+        select ${column} from T_ENUMOBJ
+        where enum_type_code = #{enumTypeCode}
+        <if test="null!= upperId and ''!= upperId">
+            and upper_id=#{upperId}
+        </if>
+        <if test="null!= upperEnumKey and ''!= upperEnumKey">
+            and upper_enum_key=#{upperEnumKey}
+        </if>
+        <if test="null== upperEnumKey and ''== upperEnumKey">
+            and upper_enum_key is null
+        </if>
+        <if test="null!= enumKey and ''!= enumKey">
+            and enum_key=#{enumKey}
+        </if>
+        <if test="null!= status">
+            and status=#{status}
+        </if>
+        order by enum_type_code asc , sort_no asc,id asc
+
+    </select>
+
+    <select id="getEnumObjByCode" resultMap="enumObj" parameterMap="enumObjVo">
+        select ${column} from T_ENUMOBJ
+        where enum_type_code = #{enumTypeCode}
+        <if test="null!= upperId and ''!= upperId">
+            and upper_id=#{upperId}
+        </if>
+        <if test="null!= upperEnumKey and ''!= upperEnumKey">
+            and upper_enum_key=#{upperEnumKey}
+        </if>
+        <if test="null== upperEnumKey and ''== upperEnumKey">
+            and upper_enum_key is null
+        </if>
+        <if test="null!= enumKey and ''!= enumKey">
+            and enum_key=#{enumKey}
+        </if>
+        <if test="null!= enumTypeCode and ''!= enumTypeCode">
+            and enum_type_code=#{enumTypeCode}
+        </if>
+        <if test="null!= status">
+            and status=#{status}
+        </if>
+    </select>
+
+    <!-- 校验数据字典是否重复 -->
+    <select id="checkEnum" resultMap="enumObj" parameterMap="enumObjVo">
+        select ${column} from T_ENUMOBJ
+        where enum_type_code = #{enumTypeCode}
+        <if test="null!=id">
+            and id=#{id}
+        </if>
+        <if test="null!=upperId">
+            and upper_id=#{upperId}
+        </if>
+        <if test="null==upperId">
+            and upper_id is null
+        </if>
+        and (enum_key = #{enumKey} or enum_value=#{enumValue})
+        order by enum_type_code asc , sort_no asc
+    </select>
+
+</mapper>

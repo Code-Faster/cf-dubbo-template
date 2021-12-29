@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="users">
+	<resultMap type="com.createTemplate.model.admin.system.pojo.Users" id="users"></resultMap>
+	<resultMap type="com.createTemplate.model.admin.system.vo.UsersVo" id="usersVo"></resultMap>
+	<parameterMap type="com.createTemplate.model.admin.system.pojo.Users"
+		id="users"></parameterMap>
+	<parameterMap type="com.createTemplate.model.admin.system.vo.UsersVo"
+		id="usersVo"></parameterMap>
+	<!-- 根据用户名、密码查询 -->
+	<!-- 根据用户名、密码查询 -->
+    <select id="findByUsersNamePassword" resultMap="users"
+            parameterMap="usersVo">
+        select ${column} from T_USER
+        where user_name = #{userName} and user_password = #{userPassword}
+    </select>
+
+    <!-- 根据用户名、密码查询 -->
+    <update id="updatePassword" parameterMap="usersVo">
+        select ${column} from T_USER
+        where user_name = #{userName} and user_password = #{userPassword}
+    </update>
+
+    <!-- 根据用户名查询 -->
+    <select id="findByUserName" resultMap="users" parameterMap="usersVo">
+        select ${column} from T_USER
+        where user_name = #{userName}
+    </select>
+
+    <!-- 分页查询管理员 -->
+    <select id="findPage" resultMap="usersVo" parameterMap="usersVo">
+        select ${column},r.role_name from T_USER u, T_ROLE r
+        where u.role_id = r.id
+        <if test="null!=key and '' != key">
+            and (u.user_name like CONCAT('%',#{key},'%') or u.real_name like CONCAT('%',#{key},'%') )
+        </if>
+        <if test="null!= status">
+            and u.status=#{status}
+        </if>
+    </select>
+
+    <!-- 查询角色下的管理员 -->
+    <select id="findUsersByRoleIds" resultMap="users" parameterMap="usersVo">
+        select ${column} from T_USER where roleId in (${roleIds})
+    </select>
+
+    <!-- 查询角色下的管理员 -->
+    <select id="findCountByRoleId" resultType="long" parameterType="long">
+        select count(1) from T_USER where roleId = #{roleId}
+    </select>
+
+    <!-- 根据id查询管理员 -->
+    <select id="findById" resultMap="users" parameterMap="usersVo">
+        select ${column} from T_USER where id = #{id}
+    </select>
+</mapper>
