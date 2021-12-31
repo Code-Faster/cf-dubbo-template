@@ -1,15 +1,16 @@
 {
-  "name": "cf-dubbo-template",
+  "name": "codefaster-dubbo-template",
   "version": "0.0.1",
   "description": "springboot、dubbo、nacos项目初始化模版",
-  "main": "dist/cf-dubbo-template.common.js",
-  "module": "dist/cf-dubbo-template.esm.js",
-  "unpkg": "dist/cf-dubbo-template.js",
-  "jsdelivr": "dist/cf-dubbo-template.js",
+  "main": "dist/codefaster-dubbo-template.common.js",
+  "module": "dist/codefaster-dubbo-template.esm.js",
+  "unpkg": "dist/codefaster-dubbo-template.js",
+  "jsdelivr": "dist/codefaster-dubbo-template.js",
   "repository": "https://github.com/Code-Faster/cf-dubbo-template.git",
   "author": "libiqi <libiqi@diffshop.com>",
   "license": "MIT",
   "keywords": [
+    "java",
     "dubbo",
     "springboot",
     "nacos",
@@ -20,6 +21,7 @@
   "files": [
     "src/*.js",
     "dist/*.js",
+    "dist/palyground",
     "types/*.d.ts"
   ],
   "gitHooks": {
