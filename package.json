@@ -6,7 +6,7 @@
   "module": "dist/index.esm.js",
   "unpkg": "dist/index.js",
   "jsdelivr": "dist/index.js",
-  "repository": "https://github.com/Code-Faster/cf-dubbo-template.git",
+  "repository": "https://github.com/Code-Faster/codefaster-dubbo-template.git",
   "author": "libiqi <libiqi@diffshop.com>",
   "license": "MIT",
   "keywords": [
@@ -65,9 +65,9 @@
     "vuepress": "^1.8.2"
   },
   "bugs": {
-    "url": "https://github.com/Code-Faster/cf-dubbo-template/issues"
+    "url": "https://github.com/Code-Faster/codefaster-dubbo-template/issues"
   },
-  "homepage": "https://github.com/Code-Faster/cf-dubbo-template#readme",
+  "homepage": "https://github.com/Code-Faster/codefaster-dubbo-template#readme",
   "dependencies": {
     "conventional-changelog-cli": "^2.1.1",
     "parse-gitignore": "^1.0.1"
