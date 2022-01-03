@@ -1,31 +1,47 @@
-/**
- * 根据传入实体类获取参数变量
- * @param {*} str
- */
-const getParamVariableFormat = (str: string) => {
-  return str.charAt(0).toLowerCase() + str.substring(1);
-};
-/** 格式化get set 方法 */
-const getSetFormat = (str: string) => {
-  return str.charAt(0).toUpperCase() + str.substring(1);
-};
+import {
+  FILE_SUFFIX,
+  getPackageName,
+  getParamVariableFormat,
+  getSetFormat,
+  TemplateTools,
+} from "../index";
+
 export default function (
-  extendsPath: string,
-  releasePath: string,
-  pojo: string,
-  vo: string,
-  pojoName: string,
-  author: string,
-  tableColArr: [],
-  getPackageNameByFileName: (args: string) => string,
-  getPackageName: (path: string, filter: string) => string
+  project: CodeFaster.Project,
+  params: CodeFaster.Params
 ) {
-  const now = new Date();
-  const voVariable = getParamVariableFormat(vo);
+  /**
+   * 检验参数是否正常
+   */
+  if (params.props.pojo == undefined || params.props.pojo == "") {
+    throw Error("pojo 必传");
+  }
+  if (params.props.vo == undefined || params.props.vo == "") {
+    throw Error("vo 必传");
+  }
+  if (params.model == undefined) {
+    throw Error("model 必传");
+  }
+  /**
+   * 根据传递的参数生成template需要的参数
+   */
+  const pojo = params.props.pojo;
   const pojoVariable = getParamVariableFormat(pojo);
-  const serviceName = pojoName + "Service";
-  const controllerName = pojoName + "Controller";
+
+  const vo = params.props.vo;
+  const voVariable = getParamVariableFormat(vo);
+
+  const author = project.owner;
+  /**
+   * 获取模版工具类
+   */
+  const tools = new TemplateTools(project);
+
+  const tableColArr = params.model.tableColArr;
+  const now = new Date();
+  const serviceName = pojo + "Service";
   const serviceNameVariable = getParamVariableFormat(serviceName);
+  const controllerName = pojo + "Controller";
 
   let tableCol = "";
   let tableColCheck = "";
@@ -65,18 +81,18 @@ export default function (
   }
   return (
     `
-package ${getPackageName(releasePath, "com")};
+package ${getPackageName(params.releasePath, "com")};
 
-import ${getPackageNameByFileName(pojo + ".java")};
-import ${getPackageNameByFileName(vo + ".java")};
-import ${getPackageNameByFileName("BusinessException.java")};
-import ${getPackageNameByFileName("Grid.java")};
-import ${getPackageNameByFileName("CheckExistParamUtil.java")};
-import ${getPackageName(extendsPath, "com")};
-import ${getPackageNameByFileName("CommonBaseController.java")};
-import ${getPackageNameByFileName("ResultEnum.java")};
-import ${getPackageNameByFileName("StringUtil.java")};
-import ${getPackageNameByFileName("ResultInfo.java")};
+import ${tools.getPackageNameByFileName(pojo + FILE_SUFFIX)};
+import ${tools.getPackageNameByFileName(vo + FILE_SUFFIX)};
+import ${tools.getPackageNameByFileName("BusinessException" + FILE_SUFFIX)};
+import ${tools.getPackageNameByFileName("Grid" + FILE_SUFFIX)};
+import ${tools.getPackageNameByFileName("CheckExistParamUtil" + FILE_SUFFIX)};
+import ${tools.getPackageNameByFileName(serviceName + FILE_SUFFIX)};
+import ${tools.getPackageNameByFileName("CommonBaseController" + FILE_SUFFIX)};
+import ${tools.getPackageNameByFileName("ResultEnum" + FILE_SUFFIX)};
+import ${tools.getPackageNameByFileName("StringUtil" + FILE_SUFFIX)};
+import ${tools.getPackageNameByFileName("ResultInfo" + FILE_SUFFIX)};
 
 import java.util.HashSet;
 import java.util.List;
@@ -84,11 +100,12 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import com.alibaba.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import org.apache.dubbo.config.annotation.DubboReference;
 
 /**
  * @author: ${author}
@@ -99,7 +116,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/${pojoVariable}")
 @Api(value = "${controllerName}", tags = { "${pojo}操作接口" })
 public class ${controllerName} extends CommonBaseController{
-  @Reference(version = "` +
+  @DubboReference(version = "` +
     "${app.service.version}" +
     `", check = false)
   ${serviceName} ${serviceNameVariable};

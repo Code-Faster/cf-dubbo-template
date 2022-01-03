@@ -11,7 +11,7 @@ const license = require("../package.json").license;
 const name = require("../package.json").name;
 const extensions = [".js", ".ts"];
 const banner = `/*!
-  * cf-dubbo-template v${version}
+  * code-dubbo-template v${version}
   * (c) ${new Date().getFullYear()} biqi li
   * @license ${license}
   */`;
@@ -60,8 +60,8 @@ function genConfig(opts) {
         copy({
           targets: [
             {
-              src: "palyground/createTemplate",
-              dest: "dist/palyground/",
+              src: "playground/createTemplate",
+              dest: "dist/playground/",
             },
           ],
         }),

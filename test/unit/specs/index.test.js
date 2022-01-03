@@ -1,85 +1,63 @@
-import CodeGenerator from "../../../src/index";
+import path from "path";
+import { TemplateTools } from "../../../src/template";
+const project = {
+  projectName: "feilang",
+  projectDir: "/Users/xiangtian/Desktop/git/flJava",
+  owner: "Code Faster",
+  type: "1",
+  templateId: 18,
+  description: "飞浪数据",
+  templateDir: "",
+  id: 1,
+  defaultPojoPath:
+    "/Users/xiangtian/Desktop/git/flJava/feilang/feilang-model/src/main/java/com/feilang/model/core/pojo",
+  defaultVoPath:
+    "/Users/xiangtian/Desktop/git/flJava/feilang/feilang-model/src/main/java/com/feilang/model/core/vo",
+  defaultServicePath:
+    "/Users/xiangtian/Desktop/git/flJava/feilang/feilang-api/src/main/java/com/feilang/api/core/doubbo/service",
+  defaultServiceImplPath:
+    "/Users/xiangtian/Desktop/git/flJava/feilang/feilang-provider/src/main/java/com/feilang/provider/core/dubbo/service",
+};
+const templateObj = {
+  fileName: "createTemplate",
+  path: path.join(__dirname, "../../../playground/createTemplate"),
+  formData: {},
+  isDir: true,
+  children: [],
+};
+describe("TemplateTools", () => {
+  it("updateProjectDirJson should work", () => {
+    const tools = new TemplateTools(project);
+    const obj = tools.updateProjectDirJson();
+    expect(obj).toBe(true);
+  });
 
-describe("service", () => {
-  it("should work", () => {
-    const serviceStr = CodeGenerator.service(
-      "releasePath",
-      "pojo",
-      "vo",
-      "pojoName",
-      "author",
-      (args) => "getPackageNameByFileName",
-      (path, filter) => "getPackageName"
-    );
-    console.log(serviceStr);
-    expect(serviceStr).toBe(
-      `package getPackageName;
-    
-      import getPackageNameByFileName;
-      import getPackageNameByFileName;
-      import getPackageNameByFileName;
-      import getPackageNameByFileName;
-      import getPackageNameByFileName;
-      import java.util.Set;
-      import java.util.List;
-      
-      /**
-       * pojoNameService服务
-       * @author: author
-       * @date: Tue Dec 28 2021 23:52:02 GMT+0800 (中国标准时间)
-       * @version V\${app.service.version}
-       */
-      public interface pojoNameService extends MybatisDao {
-          /**
-           * 保存
-           * @param vo
-           * @author: author
-           */
-          void savepojo (vo vo)throws BusinessException;
-          
-          /**
-           * 更新 
-           * @param vo
-           * @author: author
-           */
-          void updatepojo (vo vo)throws BusinessException;
-      
-          /**
-           * 根据ID查询pojo
-           * @param id
-           * @author: author
-           */
-          pojo findById(Long id) throws BusinessException;
-      
-          /**
-           * 根据ID查询vo
-           * @param id
-           * @author: author
-           */
-          vo findVOById(Long id) throws BusinessException;
-      
-          /**
-           * 根据ID集合查询
-           * @param ids
-           * @author: author
-           */
-          List<pojo> findByIds(Set<Long> ids) throws BusinessException;
-      
-          /**
-           * 根据ID删除数据
-           * @param id
-           * @author: author
-           */
-          void deleteById(Long id) throws BusinessException;
-      
-          /**
-           * 分页查询
-           * @param vo
-           * @author: author
-           * @return
-           */
-          Grid<vo> findpojoPage (vo vo)throws BusinessException;
-      }`
+  it("showStructure should work", () => {
+    const tools = new TemplateTools(project);
+    // console.log(tools.showStructure());
+    expect(tools.showStructure().fileName).toBe("createTemplate");
+  });
+
+  it("fileDisplay should work", () => {
+    const tools = new TemplateTools(project);
+    tools.fileDisplay(templateObj);
+    // console.log(templateObj);
+    expect(templateObj.children.length).toBe(10);
+  });
+
+  it("getJsonFromPath should work", () => {
+    const tools = new TemplateTools(project);
+    const obj = tools.getJsonFromPath(true);
+    // console.log(obj);
+    expect(obj.children).toHaveLength(13);
+  });
+
+  it("findOneFileByKey should work", () => {
+    const tools = new TemplateTools(project);
+    const obj = tools.findOneFileByKey("PersonServiceImpl.java");
+    console.log(obj);
+    expect(obj.label).toBe(
+      "feilang-provider/src/main/java/com/feilang/provider/core/dubbo/service/PersonServiceImpl.java"
     );
   });
 });

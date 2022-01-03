@@ -1,3 +1,5 @@
+import { getPackageName, TemplateTools, FILE_SUFFIX } from "../index";
+
 /**
  * 根据传入实体类获取参数变量
  * @param {*} str
@@ -6,26 +8,46 @@ const getParamVariableFormat = (str: string) => {
   return str.charAt(0).toLowerCase() + str.substring(1);
 };
 export default function (
-  releasePath: string,
-  pojo: string,
-  vo: string,
-  pojoName: string,
-  author: string,
-  getPackageNameByFileName: (args: string) => string,
-  getPackageName: (path: string, filter: string) => string
+  project: CodeFaster.Project,
+  params: CodeFaster.Params
 ) {
+  /**
+   * 检验参数是否正常
+   */
+  if (params.props.pojo == undefined || params.props.pojo == "") {
+    throw Error("pojo 必传");
+  }
+  if (params.props.vo == undefined || params.props.vo == "") {
+    throw Error("vo 必传");
+  }
+  if (params.model == undefined) {
+    throw Error("model 必传");
+  }
+  /**
+   * 根据传递的参数生成template需要的参数
+   */
+  const pojo = params.props.pojo;
 
-  const now = new Date();
+  const vo = params.props.vo;
   const voVariable = getParamVariableFormat(vo);
-  const serviceName = pojoName + "Service";
-  return `
-package ${getPackageName(releasePath, "com")};
 
-import ${getPackageNameByFileName("MybatisDao.java")};
-import ${getPackageNameByFileName(pojo + ".java")};
-import ${getPackageNameByFileName(vo + ".java")};
-import ${getPackageNameByFileName("BusinessException.java")};
-import ${getPackageNameByFileName("Grid.java")};
+  const author = project.owner;
+  /**
+   * 获取模版工具类
+   */
+  const tools = new TemplateTools(project);
+
+  const serviceName = pojo + "Service";
+  const now = new Date();
+
+  return `
+package ${getPackageName(params.releasePath, "com")};
+
+import ${tools.getPackageNameByFileName("MybatisDao" + FILE_SUFFIX)};
+import ${tools.getPackageNameByFileName(pojo + FILE_SUFFIX)};
+import ${tools.getPackageNameByFileName(vo + FILE_SUFFIX)};
+import ${tools.getPackageNameByFileName("BusinessException" + FILE_SUFFIX)};
+import ${tools.getPackageNameByFileName("Grid" + FILE_SUFFIX)};
 import java.util.Set;
 import java.util.List;
 

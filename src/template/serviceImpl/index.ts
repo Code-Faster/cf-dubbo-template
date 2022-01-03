@@ -1,3 +1,5 @@
+import { FILE_SUFFIX, getPackageName, TemplateTools } from "../index";
+
 /**
  * 根据传入实体类获取参数变量
  * @param {*} str
@@ -6,31 +8,50 @@ const getParamVariableFormat = (str: string) => {
   return str.charAt(0).toLowerCase() + str.substring(1);
 };
 export default function (
-  extendsPath: string,
-  releasePath: string,
-  pojo: string,
-  vo: string,
-  pojoName: string,
-  author: string,
-  getPackageNameByFileName: (args: string) => string,
-  getPackageName: (path: string, filter: string) => string
+  project: CodeFaster.Project,
+  params: CodeFaster.Params
 ) {
-  const now = new Date();
+  /**
+   * 检验参数是否正常
+   */
+  if (params.props.pojo == undefined || params.props.pojo == "") {
+    throw Error("pojo 必传");
+  }
+  if (params.props.vo == undefined || params.props.vo == "") {
+    throw Error("vo 必传");
+  }
+  if (params.model == undefined) {
+    throw Error("model 必传");
+  }
+  /**
+   * 根据传递的参数生成template需要的参数
+   */
+  const pojo = params.props.pojo;
+  const vo = params.props.vo;
   const voVariable = getParamVariableFormat(vo);
-  const serviceName = pojoName + "Service";
+
+  const author = project.owner;
+  /**
+   * 获取模版工具类
+   */
+  const tools = new TemplateTools(project);
+
+  const now = new Date();
+  const serviceName = pojo + "Service";
+
   return (
     `
-    package ${getPackageName(releasePath, "com")};
+    package ${getPackageName(params.releasePath, "com")};
     
-    import ${getPackageNameByFileName("MybatisDaoImpl.java")};
-    import ${getPackageNameByFileName(pojo + ".java")};
-    import ${getPackageNameByFileName(vo + ".java")};
-    import ${getPackageNameByFileName("BusinessException.java")};
-    import ${getPackageNameByFileName("Grid.java")};
-    import ${getPackageNameByFileName("DataUtils.java")};
-    import ${getPackageNameByFileName("PropertyUtils.java")};
-    import ${getPackageNameByFileName("PageParameter.java")};
-    import ${getPackageName(extendsPath, "com")};
+    import ${tools.getPackageNameByFileName("MybatisDaoImpl" + FILE_SUFFIX)};
+    import ${tools.getPackageNameByFileName(pojo + FILE_SUFFIX)};
+    import ${tools.getPackageNameByFileName(vo + FILE_SUFFIX)};
+    import ${tools.getPackageNameByFileName("BusinessException" + FILE_SUFFIX)};
+    import ${tools.getPackageNameByFileName("Grid" + FILE_SUFFIX)};
+    import ${tools.getPackageNameByFileName("DataUtils" + FILE_SUFFIX)};
+    import ${tools.getPackageNameByFileName("PropertyUtils" + FILE_SUFFIX)};
+    import ${tools.getPackageNameByFileName("PageParameter" + FILE_SUFFIX)};
+    import ${tools.getPackageNameByFileName(serviceName + FILE_SUFFIX)};
     
     import com.alibaba.dubbo.config.annotation.Service;
     import java.util.HashMap;
