@@ -8,7 +8,7 @@ const typescript = require("rollup-plugin-typescript2");
 const copy = require("rollup-plugin-copy");
 const version = process.env.VERSION || require("../package.json").version;
 const license = require("../package.json").license;
-const name = require("../package.json").name;
+const name = "index";
 const extensions = [".js", ".ts"];
 const banner = `/*!
   * code-dubbo-template v${version}

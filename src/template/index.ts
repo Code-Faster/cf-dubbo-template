@@ -124,7 +124,7 @@ export class TemplateTools {
     }
     const stats = fs.statSync(configPath);
     if (stats.isFile()) {
-      const jsonData: FileObj = JSON.parse(
+      const jsonData: CodeFaster.FileObj = JSON.parse(
         fs.readFileSync(configPath, "utf-8")
       );
       // 处理项目文件目录
@@ -155,7 +155,7 @@ export class TemplateTools {
     if (structure.isDir) {
       if (structure.children.length > 0) {
         // 如果是文件夹
-        structure.children.forEach((obj: FileObj) => {
+        structure.children.forEach((obj: CodeFaster.FileObj) => {
           // 如果子目录是dir
           if (obj.isDir) this.copyCoding(obj);
           else {
@@ -205,7 +205,7 @@ export class TemplateTools {
         const fileArr = fileObj.children.filter((ele: any) => {
           return ele.path === fileObj.path;
         });
-        const obj: FileObj = {
+        const obj: CodeFaster.FileObj = {
           fileName,
           path: filedir,
           sortPath: path.relative(this.projectPath, filedir),
@@ -220,7 +220,7 @@ export class TemplateTools {
         }
       }
       if (isDir) {
-        const obj: FileObj = {
+        const obj: CodeFaster.FileObj = {
           fileName,
           path: filedir,
           sortPath: path.relative(this.projectPath, filedir),
@@ -247,7 +247,7 @@ export class TemplateTools {
    * @param obj
    */
   showStructure(formData: any, obj?: any): CodeFaster.FileObj {
-    const dirStructure: FileObj = {
+    const dirStructure: CodeFaster.FileObj = {
       fileName: obj ? obj.fileName : TEMPLATE_MODEL_NAME,
       path: obj ? obj.path : this.project.templateDir,
       sortPath: obj
@@ -266,7 +266,7 @@ export class TemplateTools {
    */
   updateProjectDirJson() {
     try {
-      const jsonData: FileObj = this.getJsonFromPath(true);
+      const jsonData: CodeFaster.FileObj = this.getJsonFromPath(true);
       fs.writeFileSync(
         path.join(this.projectPath, TEMPLATE_JSON),
         JSON.stringify(jsonData)
@@ -295,7 +295,7 @@ export class TemplateTools {
       }
       // 如果还有子文件, 递归执行
       if (jsonData.children.length > 0) {
-        jsonData.children.forEach((obj: FileObj) => {
+        jsonData.children.forEach((obj: CodeFaster.FileObj) => {
           this.serachJSON(obj, key, type);
         });
       }
