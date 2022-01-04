@@ -22,6 +22,7 @@
     "src/*.js",
     "dist/*.js",
     "dist/playground",
+    "dist/.cfignore",
     "types/*.d.ts"
   ],
   "gitHooks": {
