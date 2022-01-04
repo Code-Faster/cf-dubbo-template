@@ -1,5 +1,5 @@
 /*!
-  * code-dubbo-template v0.0.7
+  * code-dubbo-template v0.0.8
   * (c) 2022 biqi li
   * @license MIT
   */
@@ -631,38 +631,38 @@ var CodeGenerator = /*#__PURE__*/function () {
       console.log("init ok !");
     }
   }, {
-    key: "getPojo",
-    value: function getPojo(params) {
-      console.log("getPojo ok !");
+    key: "generatorPojo",
+    value: function generatorPojo(params) {
+      console.log("generatorPojo ok !");
     }
   }, {
-    key: "getVO",
-    value: function getVO(params) {
-      console.log("getVO ok !");
+    key: "generatorVO",
+    value: function generatorVO(params) {
+      console.log("generatorVO ok !");
     }
   }, {
-    key: "getService",
-    value: function getService(params) {
+    key: "generatorService",
+    value: function generatorService(params) {
       fs__default["default"].writeFileSync(params.releasePath, service(this.project, params));
     }
   }, {
-    key: "getMapper",
-    value: function getMapper(params) {
+    key: "generatorMapper",
+    value: function generatorMapper(params) {
       fs__default["default"].writeFileSync(params.releasePath, mapper(this.project, params));
     }
   }, {
-    key: "getController",
-    value: function getController(params) {
+    key: "generatorController",
+    value: function generatorController(params) {
       fs__default["default"].writeFileSync(params.releasePath, controller(this.project, params));
     }
   }, {
-    key: "getServiceImpl",
-    value: function getServiceImpl(params) {
+    key: "generatorServiceImpl",
+    value: function generatorServiceImpl(params) {
       fs__default["default"].writeFileSync(params.releasePath, serviceImpl(this.project, params));
     }
   }, {
-    key: "getUnitTest",
-    value: function getUnitTest(params) {
+    key: "generatorUnitTest",
+    value: function generatorUnitTest(params) {
       fs__default["default"].writeFileSync(params.releasePath, unitTest(this.project, params));
     }
     /**
