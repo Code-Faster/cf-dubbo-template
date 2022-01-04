@@ -1,5 +1,5 @@
 /*!
-  * code-dubbo-template v0.0.6
+  * code-dubbo-template v0.0.7
   * (c) 2022 biqi li
   * @license MIT
   */
@@ -611,49 +611,51 @@ function readFile(filePath) {
 }
 
 var CodeGenerator = /*#__PURE__*/function () {
-  function CodeGenerator() {
+  function CodeGenerator(project) {
     _classCallCheck(this, CodeGenerator);
+
+    this.project = project;
   }
 
   _createClass(CodeGenerator, [{
     key: "init",
-    value: function init(project, params) {
+    value: function init(params) {
       console.log("init ok !");
     }
   }, {
     key: "getPojo",
-    value: function getPojo(project, params) {
+    value: function getPojo(params) {
       console.log("getPojo ok !");
     }
   }, {
     key: "getVO",
-    value: function getVO(project, params) {
+    value: function getVO(params) {
       console.log("getVO ok !");
     }
   }, {
     key: "getService",
-    value: function getService(project, params) {
-      fs.writeFileSync(params.releasePath, service(project, params));
+    value: function getService(params) {
+      fs.writeFileSync(params.releasePath, service(this.project, params));
     }
   }, {
     key: "getMapper",
-    value: function getMapper(project, params) {
-      fs.writeFileSync(params.releasePath, mapper(project, params));
+    value: function getMapper(params) {
+      fs.writeFileSync(params.releasePath, mapper(this.project, params));
     }
   }, {
     key: "getController",
-    value: function getController(project, params) {
-      fs.writeFileSync(params.releasePath, controller(project, params));
+    value: function getController(params) {
+      fs.writeFileSync(params.releasePath, controller(this.project, params));
     }
   }, {
     key: "getServiceImpl",
-    value: function getServiceImpl(project, params) {
-      fs.writeFileSync(params.releasePath, serviceImpl(project, params));
+    value: function getServiceImpl(params) {
+      fs.writeFileSync(params.releasePath, serviceImpl(this.project, params));
     }
   }, {
     key: "getUnitTest",
-    value: function getUnitTest(project, params) {
-      fs.writeFileSync(params.releasePath, unitTest(project, params));
+    value: function getUnitTest(params) {
+      fs.writeFileSync(params.releasePath, unitTest(this.project, params));
     }
     /**
      * 根据pojo文件地址 逆向解析模型类 model -> json 格式
@@ -714,4 +716,4 @@ var CodeGenerator = /*#__PURE__*/function () {
   return CodeGenerator;
 }();
 
-export { CodeGenerator as default, readFile };
+export { CodeGenerator as default };
