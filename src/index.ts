@@ -35,23 +35,23 @@ export default class CodeGenerator implements CodeFaster.CodeGenerator {
   }
 
   generatorService(params: CodeFaster.Params) {
-    fs.writeFileSync(params.releasePath, service(this.project, params));
+    service(this.project, params);
   }
 
   generatorMapper(params: CodeFaster.Params) {
-    fs.writeFileSync(params.releasePath, mapper(this.project, params));
+    mapper(this.project, params);
   }
 
   generatorController(params: CodeFaster.Params) {
-    fs.writeFileSync(params.releasePath, controller(this.project, params));
+    controller(this.project, params);
   }
 
   generatorServiceImpl(params: CodeFaster.Params) {
-    fs.writeFileSync(params.releasePath, serviceImpl(this.project, params));
+    serviceImpl(this.project, params);
   }
 
   generatorUnitTest(params: CodeFaster.Params) {
-    fs.writeFileSync(params.releasePath, unitTest(this.project, params));
+    unitTest(this.project, params);
   }
 
   /**

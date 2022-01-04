@@ -1,5 +1,6 @@
 import { FILE_SUFFIX, getPackageName, TemplateTools } from "../index";
-
+import fs from "fs";
+import path from "path";
 /**
  * 根据传入实体类获取参数变量
  * @param {*} str
@@ -39,7 +40,9 @@ export default function (
   const now = new Date();
   const serviceName = pojo + "Service";
 
-  return (
+  const serviceImplName = pojo + "ServiceImpl";
+
+  const template =
     `
     package ${getPackageName(params.releasePath, "com")};
     
@@ -172,6 +175,9 @@ export default function (
           return grid;
         }
     }
-    `
+    `;
+  fs.writeFileSync(
+    path.join(params.releasePath, serviceImplName + FILE_SUFFIX),
+    template
   );
 }

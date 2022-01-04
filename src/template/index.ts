@@ -52,7 +52,6 @@ export class TemplateTools {
   private project: CodeFaster.Project = {
     owner: "",
     templateId: 0,
-    templateDir: "",
     projectDir: "",
     projectName: "",
     type: 1,
@@ -64,11 +63,10 @@ export class TemplateTools {
   // 配置文件路径
   private configPath: string = "";
 
+  private templateDir: string = "";
+
   constructor(pj: CodeFaster.Project) {
-    if (pj.templateDir.length == 0) {
-      // TODO: 修正
-      pj.templateDir = path.join(pj.projectDir, pj.projectName);
-    }
+    this.templateDir = path.join(__dirname, "../../playground/createTemplate");
     this.project = pj;
     this.keyPathArr = [];
     this.projectPath = path.join(pj.projectDir, pj.projectName);
@@ -251,10 +249,10 @@ export class TemplateTools {
   showStructure(formData: any, obj?: any): CodeFaster.FileObj {
     const dirStructure: CodeFaster.FileObj = {
       fileName: obj ? obj.fileName : TEMPLATE_MODEL_NAME,
-      path: obj ? obj.path : this.project.templateDir,
+      path: obj ? obj.path : this.templateDir,
       sortPath: obj
         ? path.relative(this.projectPath, obj.path)
-        : path.relative(this.projectPath, this.project.templateDir),
+        : path.relative(this.projectPath, this.templateDir),
       formData,
       isDir: true,
       children: [],

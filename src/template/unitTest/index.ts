@@ -1,9 +1,6 @@
-import {
-  FILE_SUFFIX,
-  getPackageName,
-  getParamVariableFormat,
-  TemplateTools,
-} from "../index";
+import { FILE_SUFFIX, getParamVariableFormat, TemplateTools } from "../index";
+import fs from "fs";
+import path from "path";
 
 export default function (
   project: CodeFaster.Project,
@@ -38,7 +35,7 @@ export default function (
   const serviceName = pojo + "Service";
   const serviceNameVariable = getParamVariableFormat(serviceName);
   const e2eName = pojo + "Test";
-  return `
+  const template = `
 package com.${project.projectName};
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -152,4 +149,8 @@ public class ${e2eName} {
   }
 }
       `;
+  fs.writeFileSync(
+    path.join(params.releasePath, e2eName + FILE_SUFFIX),
+    template
+  );
 }

@@ -1,4 +1,6 @@
 import { FILE_SUFFIX, TemplateTools } from "../index";
+import fs from "fs";
+import path from "path";
 
 /**
  * 根据传入实体类获取参数变量
@@ -33,12 +35,14 @@ export default function (
   const voVariable = getParamVariableFormat(vo);
 
   const author = project.owner;
+
+  const mapperName = pojo + ".xml";
   /**
    * 获取模版工具类
    */
   const tools = new TemplateTools(project);
 
-  return `
+  const template = `
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     <mapper namespace="${pojo}">
@@ -81,4 +85,6 @@ export default function (
       </select>
     </mapper>
   `;
+
+  fs.writeFileSync(path.join(params.releasePath, mapperName), template);
 }

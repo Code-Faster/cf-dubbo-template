@@ -1,4 +1,6 @@
 import { getPackageName, TemplateTools, FILE_SUFFIX } from "../index";
+import fs from "fs";
+import path from "path";
 
 /**
  * 根据传入实体类获取参数变量
@@ -40,7 +42,7 @@ export default function (
   const serviceName = pojo + "Service";
   const now = new Date();
 
-  return `
+  const template = `
 package ${getPackageName(params.releasePath, "com")};
 
 import ${tools.getPackageNameByFileName("MybatisDao" + FILE_SUFFIX)};
@@ -109,4 +111,8 @@ public interface ${serviceName} extends MybatisDao {
     Grid<${vo}> find${pojo}Page (${vo} ${voVariable})throws BusinessException;
 }
 `;
+  fs.writeFileSync(
+    path.join(params.releasePath, serviceName + FILE_SUFFIX),
+    template
+  );
 }

@@ -5,6 +5,8 @@ import {
   getSetFormat,
   TemplateTools,
 } from "../index";
+import fs from "fs";
+import path from "path";
 
 export default function (
   project: CodeFaster.Project,
@@ -14,13 +16,13 @@ export default function (
    * 检验参数是否正常
    */
   if (params.props.pojo == undefined || params.props.pojo == "") {
-    throw Error("pojo 必传");
+    throw new Error("pojo 必传");
   }
   if (params.props.vo == undefined || params.props.vo == "") {
-    throw Error("vo 必传");
+    throw new Error("vo 必传");
   }
   if (params.model == undefined) {
-    throw Error("model 必传");
+    throw new Error("model 必传");
   }
   /**
    * 根据传递的参数生成template需要的参数
@@ -79,7 +81,7 @@ export default function (
         .join(".\r\n\t\t")}
       .check();`;
   }
-  return (
+  const template =
     `
 package ${getPackageName(params.releasePath, "com")};
 
@@ -241,6 +243,9 @@ public class ${controllerName} extends CommonBaseController{
       return new ResultInfo<Grid<${vo}>>(ResultEnum.SUCCESS.getCode(), "查询成功", ${serviceNameVariable}.find${pojo}Page(${voVariable}));
   }
 }
-      `
+      `;
+  fs.writeFileSync(
+    path.join(params.releasePath, controllerName + FILE_SUFFIX),
+    template
   );
 }

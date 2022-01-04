@@ -35,7 +35,7 @@ declare namespace CodeFaster {
     /** 项目模版 */
     templateId?: number;
     /** 模版ID对应的物理地址 */
-    templateDir: string;
+    templateDir?: string;
 
     /** Java项目详细参数 */
     defaultPojoPath?: string;
