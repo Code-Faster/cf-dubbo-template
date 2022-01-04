@@ -1,5 +1,5 @@
 /*!
-  * code-dubbo-template v0.0.5
+  * code-dubbo-template v0.0.6
   * (c) 2022 biqi li
   * @license MIT
   */
@@ -37,7 +37,7 @@ var TEMPLATE_JSON = "cfconfig.json";
 var TEMPLATE_MODEL_NAME = "createTemplate";
 /** 忽略的文件 */
 
-var EXCLUDE_PATH = parseIgnore(fs.readFileSync(".cfignore"));
+var EXCLUDE_PATH = parseIgnore(fs.readFileSync(path.join(__dirname, ".cfignore")));
 /** Java文件后缀 */
 
 var FILE_SUFFIX = ".java";
@@ -611,52 +611,49 @@ function readFile(filePath) {
 }
 
 var CodeGenerator = /*#__PURE__*/function () {
-  function CodeGenerator(project, params) {
+  function CodeGenerator() {
     _classCallCheck(this, CodeGenerator);
-
-    this.project = project;
-    this.params = params;
   }
 
   _createClass(CodeGenerator, [{
     key: "init",
-    value: function init() {
-      console.log('init ok !');
+    value: function init(project, params) {
+      console.log("init ok !");
     }
   }, {
     key: "getPojo",
-    value: function getPojo() {
-      console.log('getPojo ok !');
+    value: function getPojo(project, params) {
+      console.log("getPojo ok !");
     }
   }, {
     key: "getVO",
-    value: function getVO() {
-      console.log('getVO ok !');
+    value: function getVO(project, params) {
+      console.log("getVO ok !");
     }
   }, {
     key: "getService",
-    value: function getService() {
-      fs.writeFileSync(this.params.releasePath, service(this.project, this.params));
+    value: function getService(project, params) {
+      fs.writeFileSync(params.releasePath, service(project, params));
     }
   }, {
     key: "getMapper",
-    value: function getMapper() {
-      fs.writeFileSync(this.params.releasePath, mapper(this.project, this.params));
+    value: function getMapper(project, params) {
+      fs.writeFileSync(params.releasePath, mapper(project, params));
     }
   }, {
     key: "getController",
-    value: function getController() {
-      fs.writeFileSync(this.params.releasePath, controller(this.project, this.params));
+    value: function getController(project, params) {
+      fs.writeFileSync(params.releasePath, controller(project, params));
     }
   }, {
     key: "getServiceImpl",
-    value: function getServiceImpl() {
-      fs.writeFileSync(this.params.releasePath, serviceImpl(this.project, this.params));
+    value: function getServiceImpl(project, params) {
+      fs.writeFileSync(params.releasePath, serviceImpl(project, params));
     }
   }, {
     key: "getUnitTest",
-    value: function getUnitTest() {
-      fs.writeFileSync(this.params.releasePath, unitTest(this.project, this.params));
+    value: function getUnitTest(project, params) {
+      fs.writeFileSync(params.releasePath, unitTest(project, params));
     }
     /**
      * 根据pojo文件地址 逆向解析模型类 model -> json 格式
