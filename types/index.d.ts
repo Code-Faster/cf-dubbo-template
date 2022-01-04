@@ -1,17 +1,26 @@
-/**
- * 生成器
- */
-declare class CodeGenerator {
-  constructor(project: CodeFaster.Project, params: CodeFaster.Params);
-  getService: () => void;
-  getMapper: () => void;
-  getController: () => void;
-  getServiceImpl: () => void;
-  getUnitTest: () => void;
-  getModelByPojoPath: (filePath: string) => CodeFaster.Model;
-}
-
 declare namespace CodeFaster {
+
+  interface CodeGenerator {
+    
+    getPojo: ()=> void;
+
+    getVO: ()=> void;
+
+    getService: () => void;
+
+    getMapper: () => void;
+
+    getController: () => void;
+
+    getServiceImpl: () => void;
+
+    getUnitTest: () => void;
+
+    init: () => void;
+
+    getModelByPojoPath: (filePath: string) => CodeFaster.Model;
+  }
+
   /** 项目表 */
   type Project = {
     id?: number;

@@ -16,7 +16,7 @@ export function readFile(filePath: string): string {
     throw new Error("传入的参数必须为文件地址");
   }
 }
-export default class CodeGenerator {
+export default class CodeGenerator implements CodeFaster.CodeGenerator {
   /** 项目参数 */
   project: CodeFaster.Project;
 
@@ -26,6 +26,19 @@ export default class CodeGenerator {
     this.project = project;
     this.params = params;
   }
+
+  init() {
+    console.log('init ok !')
+  }
+
+  getPojo() {
+    console.log('getPojo ok !')
+  }
+
+  getVO() {
+    console.log('getVO ok !')
+  }
+
   getService() {
     fs.writeFileSync(
       this.params.releasePath,
