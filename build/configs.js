@@ -62,7 +62,11 @@ function genConfig(opts) {
             {
               src: "playground/createTemplate",
               dest: "dist/playground/",
-            },
+            },{
+
+              src: ".cfignore",
+              dest: "dist/",
+            }
           ],
         }),
         typescript(),
