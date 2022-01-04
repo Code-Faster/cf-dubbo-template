@@ -17,61 +17,38 @@ export function readFile(filePath: string): string {
   }
 }
 export default class CodeGenerator implements CodeFaster.CodeGenerator {
-  /** 项目参数 */
-  project: CodeFaster.Project;
+  constructor() {}
 
-  params: CodeFaster.Params;
-
-  constructor(project: CodeFaster.Project, params: CodeFaster.Params) {
-    this.project = project;
-    this.params = params;
+  init(project: CodeFaster.Project, params: CodeFaster.Params) {
+    console.log("init ok !");
   }
 
-  init() {
-    console.log('init ok !')
+  getPojo(project: CodeFaster.Project, params: CodeFaster.Params) {
+    console.log("getPojo ok !");
   }
 
-  getPojo() {
-    console.log('getPojo ok !')
+  getVO(project: CodeFaster.Project, params: CodeFaster.Params) {
+    console.log("getVO ok !");
   }
 
-  getVO() {
-    console.log('getVO ok !')
+  getService(project: CodeFaster.Project, params: CodeFaster.Params) {
+    fs.writeFileSync(params.releasePath, service(project, params));
   }
 
-  getService() {
-    fs.writeFileSync(
-      this.params.releasePath,
-      service(this.project, this.params)
-    );
+  getMapper(project: CodeFaster.Project, params: CodeFaster.Params) {
+    fs.writeFileSync(params.releasePath, mapper(project, params));
   }
 
-  getMapper() {
-    fs.writeFileSync(
-      this.params.releasePath,
-      mapper(this.project, this.params)
-    );
+  getController(project: CodeFaster.Project, params: CodeFaster.Params) {
+    fs.writeFileSync(params.releasePath, controller(project, params));
   }
 
-  getController() {
-    fs.writeFileSync(
-      this.params.releasePath,
-      controller(this.project, this.params)
-    );
+  getServiceImpl(project: CodeFaster.Project, params: CodeFaster.Params) {
+    fs.writeFileSync(params.releasePath, serviceImpl(project, params));
   }
 
-  getServiceImpl() {
-    fs.writeFileSync(
-      this.params.releasePath,
-      serviceImpl(this.project, this.params)
-    );
-  }
-
-  getUnitTest() {
-    fs.writeFileSync(
-      this.params.releasePath,
-      unitTest(this.project, this.params)
-    );
+  getUnitTest(project: CodeFaster.Project, params: CodeFaster.Params) {
+    fs.writeFileSync(params.releasePath, unitTest(project, params));
   }
 
   /**

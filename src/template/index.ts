@@ -6,7 +6,9 @@ export const TEMPLATE_JSON = "cfconfig.json";
 /** 静态目录模版目录名 */
 export const TEMPLATE_MODEL_NAME = "createTemplate";
 /** 忽略的文件 */
-export const EXCLUDE_PATH = parseIgnore(fs.readFileSync(".cfignore"));
+export const EXCLUDE_PATH = parseIgnore(
+  fs.readFileSync(path.join(__dirname, ".cfignore"))
+);
 /** Java文件后缀 */
 export const FILE_SUFFIX = ".java";
 /** 生成xml后缀 */

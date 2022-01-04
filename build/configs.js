@@ -64,7 +64,7 @@ function genConfig(opts) {
               dest: "dist/playground/",
             },{
 
-              src: ".cfignore",
+              src: "src/template/.cfignore",
               dest: "dist/",
             }
           ],

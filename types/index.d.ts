@@ -1,22 +1,32 @@
 declare namespace CodeFaster {
-
   interface CodeGenerator {
-    
-    getPojo: ()=> void;
+    getPojo: (project: CodeFaster.Project, params: CodeFaster.Params) => void;
 
-    getVO: ()=> void;
+    getVO: (project: CodeFaster.Project, params: CodeFaster.Params) => void;
 
-    getService: () => void;
+    getService: (
+      project: CodeFaster.Project,
+      params: CodeFaster.Params
+    ) => void;
 
-    getMapper: () => void;
+    getMapper: (project: CodeFaster.Project, params: CodeFaster.Params) => void;
 
-    getController: () => void;
+    getController: (
+      project: CodeFaster.Project,
+      params: CodeFaster.Params
+    ) => void;
 
-    getServiceImpl: () => void;
+    getServiceImpl: (
+      project: CodeFaster.Project,
+      params: CodeFaster.Params
+    ) => void;
 
-    getUnitTest: () => void;
+    getUnitTest: (
+      project: CodeFaster.Project,
+      params: CodeFaster.Params
+    ) => void;
 
-    init: () => void;
+    init: (project: CodeFaster.Project, params: CodeFaster.Params) => void;
 
     getModelByPojoPath: (filePath: string) => CodeFaster.Model;
   }
