@@ -1,6 +1,6 @@
 {
   "name": "codefaster-dubbo-template",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "springboot、dubbo、nacos项目初始化模版",
   "main": "dist/index.common.js",
   "module": "dist/index.esm.js",
