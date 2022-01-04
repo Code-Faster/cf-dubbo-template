@@ -26,31 +26,31 @@ export default class CodeGenerator implements CodeFaster.CodeGenerator {
     console.log("init ok !");
   }
 
-  getPojo(params: CodeFaster.Params) {
-    console.log("getPojo ok !");
+  generatorPojo(params: CodeFaster.Params) {
+    console.log("generatorPojo ok !");
   }
 
-  getVO(params: CodeFaster.Params) {
-    console.log("getVO ok !");
+  generatorVO(params: CodeFaster.Params) {
+    console.log("generatorVO ok !");
   }
 
-  getService(params: CodeFaster.Params) {
+  generatorService(params: CodeFaster.Params) {
     fs.writeFileSync(params.releasePath, service(this.project, params));
   }
 
-  getMapper(params: CodeFaster.Params) {
+  generatorMapper(params: CodeFaster.Params) {
     fs.writeFileSync(params.releasePath, mapper(this.project, params));
   }
 
-  getController(params: CodeFaster.Params) {
+  generatorController(params: CodeFaster.Params) {
     fs.writeFileSync(params.releasePath, controller(this.project, params));
   }
 
-  getServiceImpl(params: CodeFaster.Params) {
+  generatorServiceImpl(params: CodeFaster.Params) {
     fs.writeFileSync(params.releasePath, serviceImpl(this.project, params));
   }
 
-  getUnitTest(params: CodeFaster.Params) {
+  generatorUnitTest(params: CodeFaster.Params) {
     fs.writeFileSync(params.releasePath, unitTest(this.project, params));
   }
 

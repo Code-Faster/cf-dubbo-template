@@ -1,20 +1,20 @@
 declare namespace CodeFaster {
   interface CodeGenerator {
-    getPojo: (params: CodeFaster.Params) => void;
-
-    getVO: (params: CodeFaster.Params) => void;
-
-    getService: (params: CodeFaster.Params) => void;
-
-    getMapper: (params: CodeFaster.Params) => void;
-
-    getController: (params: CodeFaster.Params) => void;
-
-    getServiceImpl: (params: CodeFaster.Params) => void;
-
-    getUnitTest: (params: CodeFaster.Params) => void;
-
     init: (params: CodeFaster.Params) => void;
+
+    generatorPojo: (params: CodeFaster.Params) => void;
+
+    generatorVO: (params: CodeFaster.Params) => void;
+
+    generatorService: (params: CodeFaster.Params) => void;
+
+    generatorMapper: (params: CodeFaster.Params) => void;
+
+    generatorController: (params: CodeFaster.Params) => void;
+
+    generatorServiceImpl: (params: CodeFaster.Params) => void;
+
+    generatorUnitTest: (params: CodeFaster.Params) => void;
 
     getModelByPojoPath: (filePath: string) => CodeFaster.Model;
   }
@@ -72,6 +72,6 @@ declare namespace CodeFaster {
     props: { [key: string]: any };
     /** 输出地址 */
     releasePath: string;
-    model: Model;
+    model?: Model;
   };
 }
