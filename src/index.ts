@@ -8,7 +8,7 @@ import fs from "fs";
  * 根据文件地址读取文件
  * @param filePath
  */
-export function readFile(filePath: string): string {
+function readFile(filePath: string): string {
   const stats = fs.statSync(filePath);
   if (stats.isFile()) {
     return fs.readFileSync(filePath, "utf-8");
@@ -17,38 +17,41 @@ export function readFile(filePath: string): string {
   }
 }
 export default class CodeGenerator implements CodeFaster.CodeGenerator {
-  constructor() {}
+  project: CodeFaster.Project;
+  constructor(project: CodeFaster.Project) {
+    this.project = project;
+  }
 
-  init(project: CodeFaster.Project, params: CodeFaster.Params) {
+  init(params: CodeFaster.Params) {
     console.log("init ok !");
   }
 
-  getPojo(project: CodeFaster.Project, params: CodeFaster.Params) {
+  getPojo(params: CodeFaster.Params) {
     console.log("getPojo ok !");
   }
 
-  getVO(project: CodeFaster.Project, params: CodeFaster.Params) {
+  getVO(params: CodeFaster.Params) {
     console.log("getVO ok !");
   }
 
-  getService(project: CodeFaster.Project, params: CodeFaster.Params) {
-    fs.writeFileSync(params.releasePath, service(project, params));
+  getService(params: CodeFaster.Params) {
+    fs.writeFileSync(params.releasePath, service(this.project, params));
   }
 
-  getMapper(project: CodeFaster.Project, params: CodeFaster.Params) {
-    fs.writeFileSync(params.releasePath, mapper(project, params));
+  getMapper(params: CodeFaster.Params) {
+    fs.writeFileSync(params.releasePath, mapper(this.project, params));
   }
 
-  getController(project: CodeFaster.Project, params: CodeFaster.Params) {
-    fs.writeFileSync(params.releasePath, controller(project, params));
+  getController(params: CodeFaster.Params) {
+    fs.writeFileSync(params.releasePath, controller(this.project, params));
   }
 
-  getServiceImpl(project: CodeFaster.Project, params: CodeFaster.Params) {
-    fs.writeFileSync(params.releasePath, serviceImpl(project, params));
+  getServiceImpl(params: CodeFaster.Params) {
+    fs.writeFileSync(params.releasePath, serviceImpl(this.project, params));
   }
 
-  getUnitTest(project: CodeFaster.Project, params: CodeFaster.Params) {
-    fs.writeFileSync(params.releasePath, unitTest(project, params));
+  getUnitTest(params: CodeFaster.Params) {
+    fs.writeFileSync(params.releasePath, unitTest(this.project, params));
   }
 
   /**
