@@ -1,0 +1,16 @@
+node_modules
+target
+bin
+.settings
+logs
+.project
+.factorypath
+.classpath
+.apt_generated
+.git
+.idea
+.gitignore
+yarn.lock
+yarn-error.log
+README.md
+.DS_Store
