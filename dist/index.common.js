@@ -1,5 +1,5 @@
 /*!
-  * code-dubbo-template v0.0.3
+  * code-dubbo-template v0.0.4
   * (c) 2022 biqi li
   * @license MIT
   */
@@ -629,6 +629,21 @@ var CodeGenerator = /*#__PURE__*/function () {
   }
 
   _createClass(CodeGenerator, [{
+    key: "init",
+    value: function init() {
+      console.log('init ok !');
+    }
+  }, {
+    key: "getPojo",
+    value: function getPojo() {
+      console.log('getPojo ok !');
+    }
+  }, {
+    key: "getVO",
+    value: function getVO() {
+      console.log('getVO ok !');
+    }
+  }, {
     key: "getService",
     value: function getService() {
       fs__default["default"].writeFileSync(this.params.releasePath, service(this.project, this.params));
