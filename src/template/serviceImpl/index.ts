@@ -37,6 +37,8 @@ export default function (
    */
   const tools = new TemplateTools(project);
 
+  tools.updateProjectDirJson()
+
   const now = new Date();
   const serviceName = pojo + "Service";
 
@@ -56,7 +58,7 @@ export default function (
     import ${tools.getPackageNameByFileName("PageParameter" + FILE_SUFFIX)};
     import ${tools.getPackageNameByFileName(serviceName + FILE_SUFFIX)};
     
-    import com.alibaba.dubbo.config.annotation.Service;
+    import org.apache.dubbo.config.annotation.DubboService;
     import java.util.HashMap;
     import java.util.List;
     import java.util.Map;
@@ -68,7 +70,7 @@ export default function (
      * @date: ${now}
      * @version V\${app.service.version}
      */
-    @Service(version = "` +
+    @DubboService(version = "` +
     "${app.service.version}" +
     `", retries = -1, timeout = 6000)
     public class ${

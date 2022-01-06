@@ -75,8 +75,8 @@ export default function (
       <select id="findByIds" resultMap="${pojoVariable}" parameterMap="map">
           SELECT * FROM ${params.model.tableName} WHERE 
           <foreach collection="ids" item="item" open="ID in  (" close=")" separator=",">
-        #{item}
-      </foreach>
+            #{item}
+          </foreach>
       </select>
       
       <!-- 分页查询表 author by ${author} -->

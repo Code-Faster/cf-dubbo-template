@@ -71,6 +71,7 @@ export class TemplateTools {
     this.keyPathArr = [];
     this.projectPath = path.join(pj.projectDir, pj.projectName);
     this.configPath = path.join(this.projectPath, TEMPLATE_JSON);
+    this.updateProjectDirJson();
   }
 
   /**
