@@ -53,6 +53,7 @@ export class TemplateTools {
     owner: "",
     templateId: 0,
     projectDir: "",
+    templateDir: "",
     projectName: "",
     type: 1,
     description: "",

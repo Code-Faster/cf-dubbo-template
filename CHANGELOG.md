@@ -1,3 +1,7 @@
+## [0.0.12](https://github.com/Code-Faster/codefaster-dubbo-template/compare/v0.0.11...v0.0.12) (2022-01-07)
+
+
+
 ## [0.0.11](https://github.com/Code-Faster/codefaster-dubbo-template/compare/v0.0.10...v0.0.11) (2022-01-07)
 
 
