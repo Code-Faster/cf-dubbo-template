@@ -55,57 +55,57 @@ import java.util.List;
 
 /**
  * ${serviceName + "服务"}
- * @author: ${author}
- * @date: ${now}
+ * @author ${author}
+ * @date ${now}
  * @version V\${app.service.version}
  */
 public interface ${serviceName} extends MybatisDao {
     /**
      * 保存
      * @param ${voVariable}
-     * @author: ${author}
+     * @author ${author}
      */
     void save${pojo} (${vo} ${voVariable})throws BusinessException;
     
     /**
      * 更新 
      * @param ${voVariable}
-     * @author: ${author}
+     * @author ${author}
      */
     void update${pojo} (${vo} ${voVariable})throws BusinessException;
 
     /**
      * 根据ID查询pojo
      * @param id
-     * @author: ${author}
+     * @author ${author}
      */
     ${pojo} findById(Long id) throws BusinessException;
 
     /**
      * 根据ID查询vo
      * @param id
-     * @author: ${author}
+     * @author ${author}
      */
     ${vo} findVOById(Long id) throws BusinessException;
 
     /**
      * 根据ID集合查询
      * @param ids
-     * @author: ${author}
+     * @author ${author}
      */
     List<${pojo}> findByIds(Set<Long> ids) throws BusinessException;
 
     /**
      * 根据ID删除数据
      * @param id
-     * @author: ${author}
+     * @author ${author}
      */
     void deleteById(Long id) throws BusinessException;
 
     /**
      * 分页查询
      * @param ${voVariable}
-     * @author: ${author}
+     * @author ${author}
      * @return
      */
     Grid<${vo}> find${pojo}Page (${vo} ${voVariable})throws BusinessException;

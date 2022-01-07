@@ -1,4 +1,9 @@
-import { FILE_SUFFIX, getParamVariableFormat, TemplateTools } from "../index";
+import {
+  FILE_SUFFIX,
+  getPackageName,
+  getParamVariableFormat,
+  TemplateTools,
+} from "../index";
 import fs from "fs";
 import path from "path";
 
@@ -35,8 +40,18 @@ export default function (
   const serviceName = pojo + "Service";
   const serviceNameVariable = getParamVariableFormat(serviceName);
   const e2eName = pojo + "Test";
+  const sortName = params.releasePath.substring(
+    0,
+    params.releasePath.indexOf("/src/")
+  );
+  const application = tools
+    .findByKey("Application.java", 1)
+    .filter((ele: any) => {
+      return ele.value.indexOf(sortName) >= 0;
+    });
   const template = `
 package com.${project.projectName};
+import ${getPackageName(application[0].value, "com")};
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -57,7 +72,7 @@ import java.util.Set;
 
 /**
  * ${serviceName} 单元测试
- * @author: ${author}
+ * @author ${author}
  * @date: ${now}
  * @version V\${app.service.version}
  */
@@ -72,7 +87,7 @@ public class ${e2eName} {
 
   /**
    * 保存
-   * @author: ${author}
+   * @author ${author}
    */
   @Test
   public void save${pojo} (){
@@ -85,7 +100,7 @@ public class ${e2eName} {
   
   /**
    * 更新 
-   * @author: ${author}
+   * @author ${author}
    */
   @Test
   public void update${pojo} (){
@@ -97,7 +112,7 @@ public class ${e2eName} {
 
   /**
    * 根据ID查询详情
-   * @author: ${author}
+   * @author ${author}
    */
   @Test
   public void findById() {
@@ -107,7 +122,7 @@ public class ${e2eName} {
 
   /**
    * 根据ID查询详情
-   * @author: ${author}
+   * @author ${author}
    */
   @Test
   public void findVOById(){
@@ -117,7 +132,7 @@ public class ${e2eName} {
 
   /**
    * 根据ids 查询
-   * @author: ${author}
+   * @author ${author}
    */
   @Test
   public void findByIds() {
@@ -127,7 +142,7 @@ public class ${e2eName} {
 
   /**
    * 根据ID删除数据
-   * @author: ${author}
+   * @author ${author}
    */
   @Test
   public void deleteById() {
@@ -137,7 +152,7 @@ public class ${e2eName} {
 
   /**
    * 分页查询
-   * @author: ${author}
+   * @author ${author}
    */
   @Test
   public void find${pojo}Page (){

@@ -110,8 +110,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.apache.dubbo.config.annotation.DubboReference;
 
 /**
- * @author: ${author}
- * @date: ${now}
+ * @author ${author}
+ * @date ${now}
  * @version V\${app.service.version}
  */
 @RestController
@@ -126,7 +126,7 @@ public class ${controllerName} extends CommonBaseController{
   /**
    * 保存
    * @param ${voVariable}
-   * @author: ${author}
+   * @author ${author}
    */
   ${tableCol}
   @ApiOperation(value = "保存信息", notes = "保存信息")
@@ -140,7 +140,7 @@ public class ${controllerName} extends CommonBaseController{
   /**
    * 更新 
    * @param ${voVariable}
-   * @author: ${author}
+   * @author ${author}
    */
   @ApiImplicitParams({
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "query")
@@ -152,13 +152,13 @@ public class ${controllerName} extends CommonBaseController{
         .addCheckParam("id", ${voVariable}.getId(), "id")
         .check();
       ${serviceNameVariable}.update${pojo}(${voVariable});
-      return new ResultInfo<Object>(ResultEnum.SUCCESS.getCode(), "更新成功", null);
+      return new ResultInfo<>(ResultEnum.SUCCESS.getCode(), "更新成功", null);
   }
 
   /**
    * 根据ID查询详情
    * @param ${voVariable}
-   * @author: ${author}
+   * @author ${author}
    */
   @ApiImplicitParams({
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "query")
@@ -175,7 +175,7 @@ public class ${controllerName} extends CommonBaseController{
   /**
    * 根据ID查询详情
    * @param ${voVariable}
-   * @author: ${author}
+   * @author ${author}
    */
   @ApiImplicitParams({
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "query")
@@ -186,13 +186,13 @@ public class ${controllerName} extends CommonBaseController{
       CheckExistParamUtil.getInstance()
           .addCheckParam("id", ${voVariable}.getId(), "id")
           .check();
-      return new ResultInfo<${vo}>(ResultEnum.SUCCESS.getCode(), "成功", ${serviceNameVariable}.findvoById(${voVariable}.getId()));
+      return new ResultInfo<${vo}>(ResultEnum.SUCCESS.getCode(), "成功", ${serviceNameVariable}.findVOById(${voVariable}.getId()));
   }
 
   /**
    * 根据ids 查询
    * @param ${voVariable} id集合
-   * @author: ${author}
+   * @author ${author}
    */
   @ApiImplicitParams({
     @ApiImplicitParam(name = "ids", value = "ID集合 ，分隔", required = true, dataType = "String", paramType = "query")
@@ -209,7 +209,7 @@ public class ${controllerName} extends CommonBaseController{
   /**
    * 根据ID删除数据
    * @param ${voVariable}
-   * @author: ${author}
+   * @author ${author}
    */
   @ApiImplicitParams({
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "query")
@@ -227,7 +227,7 @@ public class ${controllerName} extends CommonBaseController{
   /**
    * 分页查询
    * @param ${voVariable}
-   * @author: ${author}
+   * @author ${author}
    */
   @ApiImplicitParams({
     @ApiImplicitParam(name = "page", value = "当前页数", required = true, dataType = "Integer", paramType = "query"),
