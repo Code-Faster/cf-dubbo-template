@@ -1,26 +1,52 @@
 declare namespace CodeFaster {
-  interface CodeGenerator {
-    init: (params: CodeFaster.Params) => void;
-
-    generatorPojo: (params: CodeFaster.Params) => void;
-
-    generatorVO: (params: CodeFaster.Params) => void;
-
-    generatorService: (params: CodeFaster.Params) => void;
-
-    generatorMapper: (params: CodeFaster.Params) => void;
-
-    generatorController: (params: CodeFaster.Params) => void;
-
-    generatorServiceImpl: (params: CodeFaster.Params) => void;
-
-    generatorUnitTest: (params: CodeFaster.Params) => void;
-
-    getModelByPojoPath: (filePath: string) => CodeFaster.Model;
+  /**
+   * 表SQL列对象
+   */
+  interface SqlColumn {
+    columnComment: string;
+    columnType: string;
+    columnName: string;
+  }
+  /**
+   * 表结构与pojo的双向json化
+   */
+  interface SqlTable {
+    // 库名
+    dbName: string;
+    // 表名
+    tableName: string;
+    // 注释
+    tableComment: string;
+    // 表单字段数组
+    tableCloums: SqlColumn[];
+    // 表执行创建SQL
+    tableSql: string;
+  }
+  /**
+   * 生成模型的表单数据
+   */
+  interface ModelForm {
+    buildPath: string;
+    buildPathVo: string;
+    tableArray: SqlTable[];
+  }
+  /**
+   * curd 的表单数据
+   */
+  interface CURDForm {
+    pojo: string;
+    vo: string;
+    pojoPath: string;
+    voPath: string;
+    servicePath: string;
+    serviceImplPath: string;
+    controllerPath: string;
+    unitTestPath: string;
+    mapperPath: string;
   }
 
   /** 项目表 */
-  type Project = {
+  interface Project {
     id?: number;
     /** 项目名称 */
     projectName: string;
@@ -35,14 +61,43 @@ declare namespace CodeFaster {
     /** 项目模版 */
     templateId?: number;
     /** 模版ID对应的物理地址 */
-    templateDir?: string;
+    templateDir: string;
 
     /** Java项目详细参数 */
     defaultPojoPath?: string;
     defaultVoPath?: string;
     defaultServicePath?: string;
     defaultServiceImplPath?: string;
-  };
+    defaultControllerPath?: string;
+    defaultMapperPath?: string;
+    defaultUnitTestPath?: string;
+  }
+  /**
+   * 代码生成器
+   */
+  interface CodeGenerator {
+    init: (params: CodeFaster.Params) => void;
+  }
+  /**
+   * Java生成器
+   */
+  interface JavaCodeGenerator extends CodeGenerator {
+    generatorPojo: (params: CodeFaster.Params) => void;
+
+    generatorVO: (params: CodeFaster.Params) => void;
+
+    generatorService: (params: CodeFaster.Params) => void;
+
+    generatorMapper: (params: CodeFaster.Params) => void;
+
+    generatorController: (params: CodeFaster.Params) => void;
+
+    generatorServiceImpl: (params: CodeFaster.Params) => void;
+
+    generatorUnitTest: (params: CodeFaster.Params) => void;
+
+    getModelByPojoPath: (filePath: string) => CodeFaster.SqlTable;
+  }
   type FileObj = {
     fileName: string;
     path: string;
@@ -54,17 +109,6 @@ declare namespace CodeFaster {
     children: Array<FileObj>;
   };
   /**
-   * pojo实体
-   */
-  type Model = {
-    /** 表名 */
-    tableName: string;
-    /** 表注释 */
-    tableCnName: string;
-    /** 列名 */
-    tableColArr: Array<any>;
-  };
-  /**
    * 生成器参数
    */
   type Params = {
@@ -72,6 +116,6 @@ declare namespace CodeFaster {
     props: { [key: string]: any };
     /** 输出地址 */
     releasePath: string;
-    model?: Model;
+    model?: SqlTable;
   };
 }

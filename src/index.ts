@@ -1,3 +1,5 @@
+import pojo from "./template/pojo/index";
+import vo from "./template/vo/index";
 import mapper from "./template/mapper/index";
 import service from "./template/service/index";
 import serviceImpl from "./template/serviceImpl/index";
@@ -16,22 +18,22 @@ function readFile(filePath: string): string {
     throw new Error("传入的参数必须为文件地址");
   }
 }
-export default class CodeGenerator implements CodeFaster.CodeGenerator {
+export default class CodeGenerator implements CodeFaster.JavaCodeGenerator {
   project: CodeFaster.Project;
   constructor(project: CodeFaster.Project) {
     this.project = project;
   }
 
   init(params: CodeFaster.Params) {
-    console.log("init ok !");
+    console.log("暂未开发，请等待!");
   }
 
   generatorPojo(params: CodeFaster.Params) {
-    console.log("generatorPojo ok !");
+    pojo(this.project, params);
   }
 
   generatorVO(params: CodeFaster.Params) {
-    console.log("generatorVO ok !");
+    vo(this.project, params);
   }
 
   generatorService(params: CodeFaster.Params) {
@@ -128,15 +130,15 @@ export default class CodeGenerator implements CodeFaster.CodeGenerator {
         // 类型后面
         let col = result[result.indexOf(type) + 1];
         return {
-          name: name,
-          type: type,
-          col: col,
-        };
+          columnComment: name,
+          columnType: type,
+          columnName: col,
+        } as CodeFaster.SqlColumn;
       });
     return {
       tableName: tableName,
-      tableCnName: tableCnName,
-      tableColArr: tableColArr,
-    } as CodeFaster.Model;
+      tableComment: tableCnName,
+      tableCloums: tableColArr,
+    } as CodeFaster.SqlTable;
   }
 }

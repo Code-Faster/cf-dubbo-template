@@ -42,6 +42,12 @@ export default function (
   const serviceName = pojo + "Service";
   const now = new Date();
 
+  // 获取ID的类型
+  const ID = params.model.tableCloums.filter((ele: CodeFaster.SqlColumn) => {
+    return ele.columnName === "id";
+  });
+  const IDType = ID[0] && ID[0].columnType;
+
   const template = `
 package ${getPackageName(params.releasePath, "com")};
 
@@ -79,28 +85,28 @@ public interface ${serviceName} extends MybatisDao {
      * @param id
      * @author ${author}
      */
-    ${pojo} findById(Long id) throws BusinessException;
+    ${pojo} findById(${IDType} id) throws BusinessException;
 
     /**
      * 根据ID查询vo
      * @param id
      * @author ${author}
      */
-    ${vo} findVOById(Long id) throws BusinessException;
+    ${vo} findVOById(${IDType} id) throws BusinessException;
 
     /**
      * 根据ID集合查询
      * @param ids
      * @author ${author}
      */
-    List<${pojo}> findByIds(Set<Long> ids) throws BusinessException;
+    List<${pojo}> findByIds(Set<${IDType}> ids) throws BusinessException;
 
     /**
      * 根据ID删除数据
      * @param id
      * @author ${author}
      */
-    void deleteById(Long id) throws BusinessException;
+    void deleteById(${IDType} id) throws BusinessException;
 
     /**
      * 分页查询

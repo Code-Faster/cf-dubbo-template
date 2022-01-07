@@ -316,4 +316,26 @@ export class TemplateTools {
       }
     }
   }
+  /**
+   * 根据 _ 生成驼峰 , type 默认true 首字母大写,如果没有 _ 分隔符 , 则取第一个大写
+   * @param {*} str
+   */
+  tranformHumpStr(str: string, type = true) {
+    if (str.length === 0) {
+      return "";
+    }
+    if (str.indexOf("_") >= 0) {
+      let strArr = str.split("_");
+      strArr = strArr.map((ele) => {
+        return ele.charAt(0).toUpperCase() + ele.substring(1).toLowerCase();
+      });
+      const result = strArr.join("");
+      return type
+        ? result
+        : result.charAt(0).toLowerCase() + result.substring(1);
+    }
+    return type
+      ? str.charAt(0).toUpperCase() + str.substring(1).toLowerCase()
+      : str;
+  }
 }

@@ -39,11 +39,17 @@ export default function (
    */
   const tools = new TemplateTools(project);
 
-  const tableColArr = params.model.tableColArr;
+  const tableColArr = params.model.tableCloums;
   const now = new Date();
   const serviceName = pojo + "Service";
   const serviceNameVariable = getParamVariableFormat(serviceName);
   const controllerName = pojo + "Controller";
+
+  // 获取ID的类型
+  const ID = params.model.tableCloums.filter((ele: CodeFaster.SqlColumn) => {
+    return ele.columnName === "id";
+  });
+  const IDType = ID[0] && ID[0].columnType;
 
   let tableCol = "";
   let tableColCheck = "";
@@ -51,30 +57,30 @@ export default function (
   if (tableColArr && tableColArr.length > 0) {
     tableCol = `@ApiImplicitParams({
         ${tableColArr
-          .map((ele: any) => {
+          .map((ele: CodeFaster.SqlColumn) => {
             return (
               '@ApiImplicitParam(name = "' +
-              ele.col +
+              ele.columnName +
               '", value = "' +
-              (ele.name || ele.col) +
+              (ele.columnComment || ele.columnName) +
               '", required = true, dataType = "' +
-              ele.type +
+              ele.columnType +
               '", paramType = "query")'
             );
           })
           .join(",\r\n\t\t")}})`;
     tableColCheck = `CheckExistParamUtil.getInstance().
       ${tableColArr
-        .map((ele: any) => {
+        .map((ele: CodeFaster.SqlColumn) => {
           return (
             'addCheckParam("' +
-            ele.col +
+            ele.columnName +
             '", ' +
             voVariable +
             ".get" +
-            getSetFormat(ele.col) +
+            getSetFormat(ele.columnName) +
             '(), "' +
-            (ele.name || ele.col) +
+            (ele.columnComment || ele.columnName) +
             '")'
           );
         })
@@ -143,7 +149,7 @@ public class ${controllerName} extends CommonBaseController{
    * @author ${author}
    */
   @ApiImplicitParams({
-    @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "query")
+    @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "${IDType}", paramType = "query")
   })
   @ApiOperation(value = "更新信息", notes = "更新信息")
   @RequestMapping(value = "/update${pojo}", method = RequestMethod.POST)
@@ -161,7 +167,7 @@ public class ${controllerName} extends CommonBaseController{
    * @author ${author}
    */
   @ApiImplicitParams({
-    @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "query")
+    @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "${IDType}", paramType = "query")
   })
   @ApiOperation(value = "根据ID查询详情", notes = "根据ID查询详情")
   @RequestMapping(value = "/findById", method = RequestMethod.POST)
@@ -178,7 +184,7 @@ public class ${controllerName} extends CommonBaseController{
    * @author ${author}
    */
   @ApiImplicitParams({
-    @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "query")
+    @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "${IDType}", paramType = "query")
   })
   @ApiOperation(value = "根据ID查询详情", notes = "根据ID查询详情")
   @RequestMapping(value = "/findVOById", method = RequestMethod.POST)
@@ -203,7 +209,7 @@ public class ${controllerName} extends CommonBaseController{
       CheckExistParamUtil.getInstance()
           .addCheckParam("ids", ${voVariable}.getIds(), "ids")
           .check();
-      return new ResultInfo<List<${pojo}>>(ResultEnum.SUCCESS.getCode(), "成功", ${serviceNameVariable}.findByIds(new HashSet<Long>(StringUtil.stringToLongList(${voVariable}.getIds()))));
+      return new ResultInfo<List<${pojo}>>(ResultEnum.SUCCESS.getCode(), "成功", ${serviceNameVariable}.findByIds(new HashSet<${IDType}>(StringUtil.stringTo${IDType}List(${voVariable}.getIds()))));
   }
 
   /**
@@ -212,7 +218,7 @@ public class ${controllerName} extends CommonBaseController{
    * @author ${author}
    */
   @ApiImplicitParams({
-    @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "Long", paramType = "query")
+    @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "${IDType}", paramType = "query")
   })
   @ApiOperation(value = "根据ID删除数据", notes = "根据ID删除数据")
   @RequestMapping(value = "/deleteById", method = RequestMethod.POST)

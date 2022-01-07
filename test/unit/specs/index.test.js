@@ -17,6 +17,26 @@ const templateObj = {
   isDir: true,
   children: [],
 };
+const model = {
+  // 表名
+  tableName: "T_TEST",
+  // 注释
+  tableComment: "generatorVO",
+  // 表单字段数组
+  tableCloums: [
+    { columnComment: "", columnType: "Long", columnName: "id" },
+    {
+      columnComment: "用户id",
+      columnType: "Long",
+      columnName: "personId",
+    },
+    {
+      columnComment: " 加时间",
+      columnType: "Date",
+      columnName: "inputDate",
+    },
+  ],
+};
 describe("TemplateTools", () => {
   it("updateProjectDirJson should work", () => {
     const tools = new TemplateTools(project);
@@ -27,9 +47,7 @@ describe("TemplateTools", () => {
   it("showStructure should work", () => {
     const tools = new TemplateTools(project);
     // console.log(tools.showStructure());
-    expect(tools.showStructure(project).fileName).toBe(
-      "createTemplate"
-    );
+    expect(tools.showStructure(project).fileName).toBe("createTemplate");
   });
 
   it("fileDisplay should work", () => {
@@ -65,6 +83,37 @@ describe("CodeGenerator", () => {
         "../../../playground/createTemplate/createTemplate-model/src/main/java/com/createTemplate/model/core/pojo/TAccountDetail.java"
       )
     );
+    // console.log(obj);
     expect(obj.tableName).toBe("T_ACCOUNT_DETAIL");
+  });
+  it("generatorPojo should work", () => {
+    const tools = new CodeGenerator(project);
+    const params = {
+      /** 其他参数 */
+      props: {},
+      /** 输出地址 */
+      releasePath: path.join(
+        __dirname,
+        "../../../playground/createTemplate/createTemplate-model/src/main/java/com/createTemplate/model/core/pojo"
+      ),
+      model: model,
+    };
+    const obj = tools.generatorPojo(params);
+    expect(obj).toBe(undefined);
+  });
+  it("generatorVO should work", () => {
+    const tools = new CodeGenerator(project);
+    const params = {
+      /** 其他参数 */
+      props: {},
+      /** 输出地址 */
+      releasePath: path.join(
+        __dirname,
+        "../../../playground/createTemplate/createTemplate-model/src/main/java/com/createTemplate/model/core/vo"
+      ),
+      model: model,
+    };
+    const obj = tools.generatorVO(params);
+    expect(obj).toBe(undefined);
   });
 });

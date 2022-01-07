@@ -73,7 +73,7 @@ import java.util.Set;
 /**
  * ${serviceName} 单元测试
  * @author ${author}
- * @date: ${now}
+ * @date ${now}
  * @version V\${app.service.version}
  */
 @RunWith(SpringRunner.class)
@@ -81,87 +81,87 @@ import java.util.Set;
 //@Rollback
 //@Transactional
 public class ${e2eName} {
-  private final Logger logger = LoggerFactory.getLogger(getClass());
-  @Autowired
-  private ${serviceName} ${serviceNameVariable};
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    @Autowired
+    private ${serviceName} ${serviceNameVariable};
 
-  /**
-   * 保存
-   * @author ${author}
-   */
-  @Test
-  public void save${pojo} (){
-      ${vo} ${voVariable} = new ${vo} ();
-      ${voVariable}.setId(1L);
-      //TODO: 生成必填字段
-      ${serviceNameVariable}.save${pojo}(${voVariable});
-      logger.debug("save ------" + JSON.toJSONString(${voVariable}));
-  }
-  
-  /**
-   * 更新 
-   * @author ${author}
-   */
-  @Test
-  public void update${pojo} (){
-      ${vo} ${voVariable} = new ${vo} ();
-      ${voVariable}.setId(1L);
-      ${serviceNameVariable}.update${pojo}(${voVariable});
-    logger.debug("update ------" + JSON.toJSONString(${voVariable}));
-  }
+    /**
+     * 保存
+     * @author ${author}
+     */
+    @Test
+    public void save${pojo} (){
+        ${vo} ${voVariable} = new ${vo} ();
+        ${voVariable}.setId(1L);
+        //TODO: 生成必填字段
+        ${serviceNameVariable}.save${pojo}(${voVariable});
+        logger.debug("save ------" + JSON.toJSONString(${voVariable}));
+    }
+    
+    /**
+     * 更新 
+     * @author ${author}
+     */
+    @Test
+    public void update${pojo} (){
+        ${vo} ${voVariable} = new ${vo} ();
+        ${voVariable}.setId(1L);
+        ${serviceNameVariable}.update${pojo}(${voVariable});
+      logger.debug("update ------" + JSON.toJSONString(${voVariable}));
+    }
 
-  /**
-   * 根据ID查询详情
-   * @author ${author}
-   */
-  @Test
-  public void findById() {
-      ${pojo} db = ${serviceNameVariable}.findVOById(1L);
-      logger.error("findById ------" + JSON.toJSONString(db));
-  }
+    /**
+     * 根据ID查询详情
+     * @author ${author}
+     */
+    @Test
+    public void findById() {
+        ${pojo} db = ${serviceNameVariable}.findVOById(1L);
+        logger.error("findById ------" + JSON.toJSONString(db));
+    }
 
-  /**
-   * 根据ID查询详情
-   * @author ${author}
-   */
-  @Test
-  public void findVOById(){
-      ${pojo} db = ${serviceNameVariable}.findVOById(1L);
-      logger.error("findVOById ------" + JSON.toJSONString(db));
-  }
+    /**
+     * 根据ID查询详情
+     * @author ${author}
+     */
+    @Test
+    public void findVOById(){
+        ${pojo} db = ${serviceNameVariable}.findVOById(1L);
+        logger.error("findVOById ------" + JSON.toJSONString(db));
+    }
 
-  /**
-   * 根据ids 查询
-   * @author ${author}
-   */
-  @Test
-  public void findByIds() {
-      List<${pojo}> list =${serviceNameVariable}.findByIds(new HashSet<Long>(StringUtil.stringToLongList("1,2,3")));
-      logger.error("findByIds ------" + JSON.toJSONString(list));
-  }
+    /**
+     * 根据ids 查询
+     * @author ${author}
+     */
+    @Test
+    public void findByIds() {
+        List<${pojo}> list =${serviceNameVariable}.findByIds(new HashSet<Long>(StringUtil.stringToLongList("1,2,3")));
+        logger.error("findByIds ------" + JSON.toJSONString(list));
+    }
 
-  /**
-   * 根据ID删除数据
-   * @author ${author}
-   */
-  @Test
-  public void deleteById() {
-      ${serviceNameVariable}.deleteById(1L);
-      logger.error("deleteById ------ success");
-  }
+    /**
+     * 根据ID删除数据
+     * @author ${author}
+     */
+    @Test
+    public void deleteById() {
+        ${serviceNameVariable}.deleteById(1L);
+        logger.error("deleteById ------ success");
+    }
 
-  /**
-   * 分页查询
-   * @author ${author}
-   */
-  @Test
-  public void find${pojo}Page (){
-      ${vo} ${voVariable} = new ${vo}();
-      ${voVariable}.setPage(1);
-      ${voVariable}.setRows(10);
-      Grid find${pojo}Page = ${serviceNameVariable}.find${pojo}Page(${voVariable});
-      logger.error("find${pojo}Page ------ " + JSON.toJSONString(find${pojo}Page));
-  }
+    /**
+     * 分页查询
+     * @author ${author}
+     */
+    @Test
+    public void find${pojo}Page (){
+        ${vo} ${voVariable} = new ${vo}();
+        ${voVariable}.setPage(1);
+        ${voVariable}.setRows(10);
+        Grid find${pojo}Page = ${serviceNameVariable}.find${pojo}Page(${voVariable});
+        logger.error("find${pojo}Page ------ " + JSON.toJSONString(find${pojo}Page));
+    }
 }
       `;
   fs.writeFileSync(

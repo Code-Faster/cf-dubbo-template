@@ -37,12 +37,18 @@ export default function (
    */
   const tools = new TemplateTools(project);
 
-  tools.updateProjectDirJson()
+  tools.updateProjectDirJson();
 
   const now = new Date();
   const serviceName = pojo + "Service";
 
   const serviceImplName = pojo + "ServiceImpl";
+
+  // 获取ID的类型
+  const ID = params.model.tableCloums.filter((ele: CodeFaster.SqlColumn) => {
+    return ele.columnName === "id";
+  });
+  const IDType = ID[0] && ID[0].columnType;
 
   const template =
     `
@@ -67,15 +73,15 @@ import java.util.Set;
 /**
  * ${serviceName + "服务实现类"}
  * @author ${author}
- * @date: ${now}
+ * @date ${now}
  * @version V\${app.service.version}
  */
 @DubboService(version = "` +
-"${app.service.version}" +
-`", retries = -1, timeout = 6000)
+    "${app.service.version}" +
+    `", retries = -1, timeout = 6000)
 public class ${
-  serviceName + "Impl"
-} extends MybatisDaoImpl implements ${serviceName} {
+      serviceName + "Impl"
+    } extends MybatisDaoImpl implements ${serviceName} {
 
     public final String className = "${pojo}";
     
@@ -88,8 +94,8 @@ public class ${
     public void save${pojo} (${vo} ${voVariable}){
         ${pojo} ${getParamVariableFormat(pojo)} = new ${pojo}();
         DataUtils.copyPropertiesIgnoreNull(${voVariable}, ${getParamVariableFormat(
-  pojo
-)});
+      pojo
+    )});
         super.save(${getParamVariableFormat(pojo)});
     }
     
@@ -114,7 +120,7 @@ public class ${
      * @author ${author}
      */
     @Override
-    public ${pojo} findById(Long id) {
+    public ${pojo} findById(${IDType} id) {
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);
         map.put("column", PropertyUtils.getPropertyNames(${pojo}.class));
@@ -127,7 +133,7 @@ public class ${
      * @author ${author}
      */
     @Override
-    public ${vo} findVOById(Long id){
+    public ${vo} findVOById(${IDType} id){
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);
         map.put("column", PropertyUtils.getPropertyNames(${pojo}.class));
@@ -140,7 +146,7 @@ public class ${
      * @author ${author}
      */
     @Override
-    public List<${pojo}> findByIds(Set<Long> ids) {
+    public List<${pojo}> findByIds(Set<${IDType}> ids) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("ids", ids);
         map.put("column", PropertyUtils.getPropertyNames(${pojo}.class));
@@ -153,7 +159,7 @@ public class ${
      * @author ${author}
      */
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(${IDType} id) {
       ${pojo} dbObj = this.findById(id);
       if (dbObj == null) {
           throw new BusinessException("数据不存在");

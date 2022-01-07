@@ -1,14 +1,7 @@
-import { FILE_SUFFIX, TemplateTools } from "../index";
+import { FILE_SUFFIX, getParamVariableFormat, TemplateTools } from "../index";
 import fs from "fs";
 import path from "path";
 
-/**
- * 根据传入实体类获取参数变量
- * @param {*} str
- */
-const getParamVariableFormat = (str: string) => {
-  return str.charAt(0).toLowerCase() + str.substring(1);
-};
 export default function (
   project: CodeFaster.Project,
   params: CodeFaster.Params
@@ -36,7 +29,7 @@ export default function (
 
   const author = project.owner;
 
-  const mapperName = pojo + ".xml";
+  const mapperName = pojo + "Mapper.xml";
   /**
    * 获取模版工具类
    */
