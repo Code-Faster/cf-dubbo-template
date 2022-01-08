@@ -3,6 +3,7 @@ import fs from "fs";
 import parseIgnore from "parse-gitignore";
 /** 配置文件默认名称 */
 export const TEMPLATE_JSON = "cfconfig.json";
+const TEMPLATE_DIR = path.join(__dirname, "../../playground/createTemplate");
 /** 静态目录模版目录名 */
 export const TEMPLATE_MODEL_NAME = "createTemplate";
 /** 忽略的文件 */
@@ -52,27 +53,60 @@ export class TemplateTools {
   private project: CodeFaster.Project = {
     owner: "",
     templateId: 0,
+    // 目录最终路径
     projectDir: "",
-    templateDir: "",
     projectName: "",
     type: 1,
     description: "",
   };
   private keyPathArr: Array<any> = [];
-  // 项目最终路径
-  private projectPath: string = "";
   // 配置文件路径
   private configPath: string = "";
 
-  private templateDir: string = "";
-
   constructor(pj: CodeFaster.Project) {
-    this.templateDir = path.join(__dirname, "../../playground/createTemplate");
     this.project = pj;
     this.keyPathArr = [];
-    this.projectPath = path.join(pj.projectDir, pj.projectName);
-    this.configPath = path.join(this.projectPath, TEMPLATE_JSON);
-    this.updateProjectDirJson();
+    this.configPath = path.join(pj.projectDir, TEMPLATE_JSON);
+  }
+  /** 初始化项目 */
+  init() {
+    // 1、获取模版目录结构
+    const templateConfig = this.getTemplateConfig();
+    this.fileDisplay(templateConfig);
+    // 2、生成新项目结构目录文件
+    const projectConfig = this.getInitConfig(this.project);
+    projectConfig.children = templateConfig.children;
+    projectConfig.fromPath = templateConfig.path;
+    this.replaceStructure(projectConfig);
+    // 3、将模版修改后输出到产出目录
+    this.copyCoding(projectConfig);
+    // 4、将生成的目录文件copy到输出目录项目下
+    fs.writeFileSync(
+      path.join(this.project.projectDir, TEMPLATE_JSON),
+      JSON.stringify(projectConfig)
+    );
+  }
+
+  replaceStructure(structure: CodeFaster.ConfigJSON) {
+    const sep = path.sep;
+    // TODO: 测试windows平台是否效果一致
+    const releasePath = this.project.projectDir;
+    let fromPath = structure.path;
+    structure.fromPath = fromPath;
+    structure.path = fromPath
+      .replaceAll(TEMPLATE_DIR, releasePath)
+      .replaceAll(TEMPLATE_MODEL_NAME, this.project.projectName);
+    if (structure.children.length > 0) {
+      structure.children.forEach((obj: CodeFaster.ConfigJSON) => {
+        const fromPath = obj.fromPath;
+        obj.fromPath = fromPath;
+        fromPath &&
+          (obj.path = fromPath
+            .replaceAll(TEMPLATE_DIR, releasePath)
+            .replaceAll(TEMPLATE_MODEL_NAME, this.project.projectName));
+        this.replaceStructure(obj);
+      });
+    }
   }
 
   /**
@@ -105,7 +139,7 @@ export class TemplateTools {
   findByKey(key: string, type: number) {
     // 置空
     this.keyPathArr = [];
-    const jsonData: CodeFaster.FileObj = this.getJsonFromPath();
+    const jsonData: CodeFaster.ConfigJSON = this.getJsonFromPath();
     this.serachJSON(jsonData, key, type);
     return this.keyPathArr;
   }
@@ -118,7 +152,7 @@ export class TemplateTools {
   getJsonFromPath = (
     isUpdate?: boolean,
     filePath?: string
-  ): CodeFaster.FileObj => {
+  ): CodeFaster.ConfigJSON => {
     let configPath = this.configPath;
     // 如果导入的时候指定文件
     if (filePath) {
@@ -126,42 +160,48 @@ export class TemplateTools {
     }
     const stats = fs.statSync(configPath);
     if (stats.isFile()) {
-      const jsonData: CodeFaster.FileObj = JSON.parse(
+      let jsonData: CodeFaster.ConfigJSON = JSON.parse(
         fs.readFileSync(configPath, "utf-8")
       );
       // 处理项目文件目录
       if (isUpdate) {
         // 重新生成
         jsonData.path = path.parse(configPath).dir;
-        if (jsonData.formData && jsonData.formData !== undefined) {
+        if (jsonData.project && jsonData.project !== undefined) {
           // buildPath 去除项目名称
           const arr = path.parse(configPath).dir.split(path.sep);
-          arr.pop();
-          jsonData.formData.buildPath = arr.join(path.sep);
+          jsonData.project.projectDir = arr.join(path.sep);
+        } else {
+          throw Error("config缺少project属性");
         }
-        return this.showStructure(jsonData.formData, jsonData);
+        return this.showStructure(jsonData.project);
       }
       return jsonData;
     }
     throw Error("文件地址格式不正确！");
   };
 
+  showStructure(project: CodeFaster.Project): CodeFaster.ConfigJSON {
+    let dir_structure: CodeFaster.ConfigJSON = this.getInitConfig(project);
+    this.fileDisplay(dir_structure);
+    return dir_structure;
+  }
   /**
    * 拷贝模版代码，复制模版代码，内部做关键字替换
    * @param structure
    */
-  copyCoding(structure: CodeFaster.FileObj) {
+  copyCoding(structure: CodeFaster.ConfigJSON) {
     if (!fs.existsSync(structure.path)) {
       fs.mkdirSync(structure.path);
     }
     if (structure.isDir) {
       if (structure.children.length > 0) {
         // 如果是文件夹
-        structure.children.forEach((obj: CodeFaster.FileObj) => {
+        structure.children.forEach((obj: CodeFaster.ConfigJSON) => {
           // 如果子目录是dir
           if (obj.isDir) this.copyCoding(obj);
           else {
-            const data = fs.readFileSync(obj.path || "", "utf8");
+            const data = fs.readFileSync(obj.fromPath || "", "utf8");
             const result = data.replace(
               new RegExp(TEMPLATE_MODEL_NAME, "g"),
               this.project.projectName
@@ -172,7 +212,7 @@ export class TemplateTools {
       }
     } else {
       // 如果不是文件夹
-      const data = fs.readFileSync(structure.path || "", "utf8");
+      const data = fs.readFileSync(structure.fromPath || "", "utf8");
       const result = data.replace(
         new RegExp(TEMPLATE_MODEL_NAME, "g"),
         this.project.projectName
@@ -185,7 +225,7 @@ export class TemplateTools {
    * 遍历文件目录结构
    * @param fileObj
    */
-  fileDisplay(fileObj: CodeFaster.FileObj) {
+  fileDisplay(fileObj: CodeFaster.ConfigJSON) {
     // 根据文件路径读取文件，返回文件列表
     const files = fs.readdirSync(fileObj.path);
     // 遍历读取到的文件列表
@@ -207,10 +247,12 @@ export class TemplateTools {
         const fileArr = fileObj.children.filter((ele: any) => {
           return ele.path === fileObj.path;
         });
-        const obj: CodeFaster.FileObj = {
+        const obj: CodeFaster.ConfigJSON = {
           fileName,
           path: filedir,
-          sortPath: path.relative(this.projectPath, filedir),
+          sortPath: fileObj.project?.projectDir
+            ? path.relative(fileObj.project?.projectDir, filedir)
+            : fileName,
           isDir: !isFile,
           children: [],
         };
@@ -222,10 +264,12 @@ export class TemplateTools {
         }
       }
       if (isDir) {
-        const obj: CodeFaster.FileObj = {
+        const obj: CodeFaster.ConfigJSON = {
           fileName,
           path: filedir,
-          sortPath: path.relative(this.projectPath, filedir),
+          sortPath: fileObj.project?.projectDir
+            ? path.relative(fileObj.project?.projectDir, filedir)
+            : fileName,
           isDir,
           children: [],
         };
@@ -243,24 +287,35 @@ export class TemplateTools {
       }
     });
   }
+
   /**
-   * 获取模版文件结构
-   * @param formData
-   * @param obj
+   * 获取初始化config
+   * @param project 项目参数
+   * @returns
    */
-  showStructure(formData: any, obj?: any): CodeFaster.FileObj {
-    const dirStructure: CodeFaster.FileObj = {
-      fileName: obj ? obj.fileName : TEMPLATE_MODEL_NAME,
-      path: obj ? obj.path : this.templateDir,
-      sortPath: obj
-        ? path.relative(this.projectPath, obj.path)
-        : path.relative(this.projectPath, this.templateDir),
-      formData,
+  getInitConfig(project: CodeFaster.Project) {
+    return {
+      fileName: project.projectName,
+      path: project.projectDir,
+      sortPath: path.relative(project.projectDir, project.projectDir),
+      isDir: true,
+      project: project,
+      children: [],
+    } as CodeFaster.ConfigJSON;
+  }
+
+  /**
+   * 获取模版config
+   * @returns
+   */
+  getTemplateConfig() {
+    return {
+      fileName: TEMPLATE_MODEL_NAME,
+      path: TEMPLATE_DIR,
+      sortPath: path.relative(TEMPLATE_DIR, TEMPLATE_DIR),
       isDir: true,
       children: [],
-    };
-    this.fileDisplay(dirStructure);
-    return dirStructure;
+    } as CodeFaster.ConfigJSON;
   }
 
   /**
@@ -268,11 +323,10 @@ export class TemplateTools {
    */
   updateProjectDirJson() {
     try {
-      const jsonData: CodeFaster.FileObj = this.getJsonFromPath(true);
-      fs.writeFileSync(
-        path.join(this.projectPath, TEMPLATE_JSON),
-        JSON.stringify(jsonData)
-      );
+      if (fs.existsSync(this.configPath)) {
+        const jsonData: CodeFaster.ConfigJSON = this.getJsonFromPath(true);
+        fs.writeFileSync(this.configPath, JSON.stringify(jsonData));
+      }
     } catch (error: unknown) {
       throw Error("updateProjectDirJson throw error : " + error);
     }
@@ -285,7 +339,7 @@ export class TemplateTools {
    * @param key   关键字
    * @param type 搜索文件夹 还是 文件 默认0 :文件夹 1: 文件 2、模糊搜索文件
    */
-  serachJSON(jsonData: CodeFaster.FileObj, key: string, type: number) {
+  serachJSON(jsonData: CodeFaster.ConfigJSON, key: string, type: number) {
     // 如果是文件夹
     if (jsonData.isDir) {
       if (jsonData.fileName === key && type === 0) {
@@ -297,7 +351,7 @@ export class TemplateTools {
       }
       // 如果还有子文件, 递归执行
       if (jsonData.children.length > 0) {
-        jsonData.children.forEach((obj: CodeFaster.FileObj) => {
+        jsonData.children.forEach((obj: CodeFaster.ConfigJSON) => {
           this.serachJSON(obj, key, type);
         });
       }

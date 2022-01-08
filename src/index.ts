@@ -6,6 +6,7 @@ import serviceImpl from "./template/serviceImpl/index";
 import controller from "./template/controller/index";
 import unitTest from "./template/unitTest/index";
 import fs from "fs";
+import { TemplateTools } from "./template/index";
 /**
  * 根据文件地址读取文件
  * @param filePath
@@ -25,7 +26,8 @@ export default class CodeGenerator implements CodeFaster.JavaCodeGenerator {
   }
 
   init(params: CodeFaster.Params) {
-    console.log("暂未开发，请等待!");
+    const tools = new TemplateTools(this.project);
+    tools.init();
   }
 
   generatorPojo(params: CodeFaster.Params) {
@@ -140,5 +142,10 @@ export default class CodeGenerator implements CodeFaster.JavaCodeGenerator {
       tableComment: tableCnName,
       tableCloums: tableColArr,
     } as CodeFaster.SqlTable;
+  }
+
+  updateProjectConfig() {
+    const tools = new TemplateTools(this.project);
+    tools.updateProjectDirJson();
   }
 }

@@ -2,8 +2,8 @@ import path from "path";
 import { TemplateTools } from "../../../src/template";
 import CodeGenerator from "../../../src/index";
 const project = {
-  projectName: "createTemplate",
-  projectDir: path.join(__dirname, "../../../playground"),
+  projectName: "test",
+  projectDir: path.join(__dirname, "../../../playground/test"),
   owner: "Code Faster",
   type: "1",
   templateId: 1,
@@ -38,16 +38,14 @@ const model = {
   ],
 };
 describe("TemplateTools", () => {
+  it("init should work", () => {
+    const tools = new TemplateTools(project);
+    tools.init();
+  });
   it("updateProjectDirJson should work", () => {
     const tools = new TemplateTools(project);
     const obj = tools.updateProjectDirJson();
     expect(obj).toBe(true);
-  });
-
-  it("showStructure should work", () => {
-    const tools = new TemplateTools(project);
-    // console.log(tools.showStructure());
-    expect(tools.showStructure(project).fileName).toBe("createTemplate");
   });
 
   it("fileDisplay should work", () => {
@@ -60,7 +58,6 @@ describe("TemplateTools", () => {
   it("getJsonFromPath should work", () => {
     const tools = new TemplateTools(project);
     const obj = tools.getJsonFromPath(true);
-    // console.log(obj);
     expect(obj.children).toHaveLength(10);
   });
 
@@ -68,9 +65,7 @@ describe("TemplateTools", () => {
     const tools = new TemplateTools(project);
     const obj = tools.findOneFileByKey("PersonServiceImpl.java");
     // console.log(obj);
-    expect(obj.label).toBe(
-      "createTemplate-provider/src/main/java/com/createTemplate/provider/core/dubbo/service/PersonServiceImpl.java"
-    );
+    expect(obj.label).toBe("PersonServiceImpl.java");
   });
 });
 

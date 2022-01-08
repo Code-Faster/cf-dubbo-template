@@ -60,8 +60,6 @@ declare namespace CodeFaster {
     description?: string;
     /** 项目模版 */
     templateId?: number;
-    /** 模版ID对应的物理地址 */
-    templateDir: string;
 
     /** Java项目详细参数 */
     defaultPojoPath?: string;
@@ -76,10 +74,13 @@ declare namespace CodeFaster {
    * 代码生成器
    */
   interface CodeGenerator {
+    /** 公用方法：初始化项目 */
     init: (params: CodeFaster.Params) => void;
+    /** 公用方法：更新项目配置文件 */
+    updateProjectConfig: () => void;
   }
   /**
-   * Java生成器
+   * Java生成器，Java模版私有化方法
    */
   interface JavaCodeGenerator extends CodeGenerator {
     generatorPojo: (params: CodeFaster.Params) => void;
@@ -98,15 +99,17 @@ declare namespace CodeFaster {
 
     getModelByPojoPath: (filePath: string) => CodeFaster.SqlTable;
   }
-  type FileObj = {
+  type ConfigJSON = {
     fileName: string;
     path: string;
+    // 拷贝项目使用
+    fromPath?: string;
     /** 相对于项目根目录的地址 */
     sortPath: string;
-    formData?: { [key: string]: any };
+    project?: CodeFaster.Project;
     // false 文件 true 文件夹
     isDir: boolean;
-    children: Array<FileObj>;
+    children: Array<ConfigJSON>;
   };
   /**
    * 生成器参数
