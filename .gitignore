@@ -26,3 +26,5 @@ node_modules/
 .settings
 target/
 playground/test
+Ttest.java
+TTestVO.java
