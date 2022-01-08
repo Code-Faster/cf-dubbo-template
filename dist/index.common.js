@@ -1,5 +1,5 @@
 /*!
-  * code-dubbo-template v0.0.12
+  * code-dubbo-template v0.0.13
   * (c) 2022 biqi li
   * @license MIT
   */
@@ -40,6 +40,7 @@ function _createClass(Constructor, protoProps, staticProps) {
 /** 配置文件默认名称 */
 
 var TEMPLATE_JSON = "cfconfig.json";
+var TEMPLATE_DIR = path__default["default"].join(__dirname, "../../playground/createTemplate");
 /** 静态目录模版目录名 */
 
 var TEMPLATE_MODEL_NAME = "createTemplate";
@@ -92,18 +93,15 @@ var TemplateTools = /*#__PURE__*/function () {
     this.project = {
       owner: "",
       templateId: 0,
+      // 目录最终路径
       projectDir: "",
-      templateDir: "",
       projectName: "",
       type: 1,
       description: ""
     };
-    this.keyPathArr = []; // 项目最终路径
-
-    this.projectPath = ""; // 配置文件路径
+    this.keyPathArr = []; // 配置文件路径
 
     this.configPath = "";
-    this.templateDir = "";
     /**
      * 根据文件转化json结构
      * @param isUpdate 是否强制更新文件
@@ -126,14 +124,15 @@ var TemplateTools = /*#__PURE__*/function () {
           // 重新生成
           jsonData.path = path__default["default"].parse(configPath).dir;
 
-          if (jsonData.formData && jsonData.formData !== undefined) {
+          if (jsonData.project && jsonData.project !== undefined) {
             // buildPath 去除项目名称
             var arr = path__default["default"].parse(configPath).dir.split(path__default["default"].sep);
-            arr.pop();
-            jsonData.formData.buildPath = arr.join(path__default["default"].sep);
+            jsonData.project.projectDir = arr.join(path__default["default"].sep);
+          } else {
+            throw Error("config缺少project属性");
           }
 
-          return _this.showStructure(jsonData.formData, jsonData);
+          return _this.showStructure(jsonData.project);
         }
 
         return jsonData;
@@ -142,20 +141,57 @@ var TemplateTools = /*#__PURE__*/function () {
       throw Error("文件地址格式不正确！");
     };
 
-    this.templateDir = path__default["default"].join(__dirname, "../../playground/createTemplate");
     this.project = pj;
     this.keyPathArr = [];
-    this.projectPath = path__default["default"].join(pj.projectDir, pj.projectName);
-    this.configPath = path__default["default"].join(this.projectPath, TEMPLATE_JSON);
-    this.updateProjectDirJson();
+    this.configPath = path__default["default"].join(pj.projectDir, TEMPLATE_JSON);
   }
-  /**
-   * 根据文件名、搜索目录获取唯一文件
-   * @param fileName
-   */
+  /** 初始化项目 */
 
 
   _createClass(TemplateTools, [{
+    key: "init",
+    value: function init() {
+      // 1、获取模版目录结构
+      var templateConfig = this.getTemplateConfig();
+      this.fileDisplay(templateConfig); // 2、生成新项目结构目录文件
+
+      var projectConfig = this.getInitConfig(this.project);
+      projectConfig.children = templateConfig.children;
+      projectConfig.fromPath = templateConfig.path;
+      this.replaceStructure(projectConfig); // 3、将模版修改后输出到产出目录
+
+      this.copyCoding(projectConfig); // 4、将生成的目录文件copy到输出目录项目下
+
+      fs__default["default"].writeFileSync(path__default["default"].join(this.project.projectDir, TEMPLATE_JSON), JSON.stringify(projectConfig));
+    }
+  }, {
+    key: "replaceStructure",
+    value: function replaceStructure(structure) {
+      var _this2 = this;
+
+      path__default["default"].sep; // TODO: 测试windows平台是否效果一致
+
+      var releasePath = this.project.projectDir;
+      var fromPath = structure.path;
+      structure.fromPath = fromPath;
+      structure.path = fromPath.replaceAll(TEMPLATE_DIR, releasePath).replaceAll(TEMPLATE_MODEL_NAME, this.project.projectName);
+
+      if (structure.children.length > 0) {
+        structure.children.forEach(function (obj) {
+          var fromPath = obj.fromPath;
+          obj.fromPath = fromPath;
+          fromPath && (obj.path = fromPath.replaceAll(TEMPLATE_DIR, releasePath).replaceAll(TEMPLATE_MODEL_NAME, _this2.project.projectName));
+
+          _this2.replaceStructure(obj);
+        });
+      }
+    }
+    /**
+     * 根据文件名、搜索目录获取唯一文件
+     * @param fileName
+     */
+
+  }, {
     key: "findOneFileByKey",
     value: function findOneFileByKey(fileName) {
       var filePathArr = this.findByKey(fileName, 1);
@@ -194,6 +230,13 @@ var TemplateTools = /*#__PURE__*/function () {
       this.serachJSON(jsonData, key, type);
       return this.keyPathArr;
     }
+  }, {
+    key: "showStructure",
+    value: function showStructure(project) {
+      var dir_structure = this.getInitConfig(project);
+      this.fileDisplay(dir_structure);
+      return dir_structure;
+    }
     /**
      * 拷贝模版代码，复制模版代码，内部做关键字替换
      * @param structure
@@ -202,7 +245,7 @@ var TemplateTools = /*#__PURE__*/function () {
   }, {
     key: "copyCoding",
     value: function copyCoding(structure) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (!fs__default["default"].existsSync(structure.path)) {
         fs__default["default"].mkdirSync(structure.path);
@@ -213,16 +256,16 @@ var TemplateTools = /*#__PURE__*/function () {
           // 如果是文件夹
           structure.children.forEach(function (obj) {
             // 如果子目录是dir
-            if (obj.isDir) { _this2.copyCoding(obj); }else {
-              var data = fs__default["default"].readFileSync(obj.path || "", "utf8");
-              var result = data.replace(new RegExp(TEMPLATE_MODEL_NAME, "g"), _this2.project.projectName);
+            if (obj.isDir) { _this3.copyCoding(obj); }else {
+              var data = fs__default["default"].readFileSync(obj.fromPath || "", "utf8");
+              var result = data.replace(new RegExp(TEMPLATE_MODEL_NAME, "g"), _this3.project.projectName);
               fs__default["default"].writeFileSync(obj.path, result, "utf8");
             }
           });
         }
       } else {
         // 如果不是文件夹
-        var data = fs__default["default"].readFileSync(structure.path || "", "utf8");
+        var data = fs__default["default"].readFileSync(structure.fromPath || "", "utf8");
         var result = data.replace(new RegExp(TEMPLATE_MODEL_NAME, "g"), this.project.projectName);
         fs__default["default"].writeFileSync(structure.path, result, "utf8");
       }
@@ -235,7 +278,7 @@ var TemplateTools = /*#__PURE__*/function () {
   }, {
     key: "fileDisplay",
     value: function fileDisplay(fileObj) {
-      var _this3 = this;
+      var _this4 = this;
 
       // 根据文件路径读取文件，返回文件列表
       var files = fs__default["default"].readdirSync(fileObj.path); // 遍历读取到的文件列表
@@ -258,6 +301,8 @@ var TemplateTools = /*#__PURE__*/function () {
         }
 
         if (isFile) {
+          var _fileObj$project, _fileObj$project2;
+
           // 根据 fileObj 判读缓存数据 是否存在父亲目录
           var fileArr = fileObj.children.filter(function (ele) {
             return ele.path === fileObj.path;
@@ -265,7 +310,7 @@ var TemplateTools = /*#__PURE__*/function () {
           var obj = {
             fileName: fileName,
             path: filedir,
-            sortPath: path__default["default"].relative(_this3.projectPath, filedir),
+            sortPath: (_fileObj$project = fileObj.project) !== null && _fileObj$project !== void 0 && _fileObj$project.projectDir ? path__default["default"].relative((_fileObj$project2 = fileObj.project) === null || _fileObj$project2 === void 0 ? void 0 : _fileObj$project2.projectDir, filedir) : fileName,
             isDir: !isFile,
             children: []
           }; // 如果有父级
@@ -278,10 +323,12 @@ var TemplateTools = /*#__PURE__*/function () {
         }
 
         if (isDir) {
+          var _fileObj$project3, _fileObj$project4;
+
           var _obj = {
             fileName: fileName,
             path: filedir,
-            sortPath: path__default["default"].relative(_this3.projectPath, filedir),
+            sortPath: (_fileObj$project3 = fileObj.project) !== null && _fileObj$project3 !== void 0 && _fileObj$project3.projectDir ? path__default["default"].relative((_fileObj$project4 = fileObj.project) === null || _fileObj$project4 === void 0 ? void 0 : _fileObj$project4.projectDir, filedir) : fileName,
             isDir: isDir,
             children: []
           }; // 根据 fileObj 判读缓存数据 是否存在父亲目录
@@ -296,30 +343,44 @@ var TemplateTools = /*#__PURE__*/function () {
             fileObj.children.push(_obj);
           }
 
-          _this3.fileDisplay(_obj); // 递归，如果是文件夹，就继续遍历该文件夹下面的文件
+          _this4.fileDisplay(_obj); // 递归，如果是文件夹，就继续遍历该文件夹下面的文件
 
         }
       });
     }
     /**
-     * 获取模版文件结构
-     * @param formData
-     * @param obj
+     * 获取初始化config
+     * @param project 项目参数
+     * @returns
      */
 
   }, {
-    key: "showStructure",
-    value: function showStructure(formData, obj) {
-      var dirStructure = {
-        fileName: obj ? obj.fileName : TEMPLATE_MODEL_NAME,
-        path: obj ? obj.path : this.templateDir,
-        sortPath: obj ? path__default["default"].relative(this.projectPath, obj.path) : path__default["default"].relative(this.projectPath, this.templateDir),
-        formData: formData,
+    key: "getInitConfig",
+    value: function getInitConfig(project) {
+      return {
+        fileName: project.projectName,
+        path: project.projectDir,
+        sortPath: path__default["default"].relative(project.projectDir, project.projectDir),
+        isDir: true,
+        project: project,
+        children: []
+      };
+    }
+    /**
+     * 获取模版config
+     * @returns
+     */
+
+  }, {
+    key: "getTemplateConfig",
+    value: function getTemplateConfig() {
+      return {
+        fileName: TEMPLATE_MODEL_NAME,
+        path: TEMPLATE_DIR,
+        sortPath: path__default["default"].relative(TEMPLATE_DIR, TEMPLATE_DIR),
         isDir: true,
         children: []
       };
-      this.fileDisplay(dirStructure);
-      return dirStructure;
     }
     /**
      * 更新项目结构
@@ -329,8 +390,10 @@ var TemplateTools = /*#__PURE__*/function () {
     key: "updateProjectDirJson",
     value: function updateProjectDirJson() {
       try {
-        var jsonData = this.getJsonFromPath(true);
-        fs__default["default"].writeFileSync(path__default["default"].join(this.projectPath, TEMPLATE_JSON), JSON.stringify(jsonData));
+        if (fs__default["default"].existsSync(this.configPath)) {
+          var jsonData = this.getJsonFromPath(true);
+          fs__default["default"].writeFileSync(this.configPath, JSON.stringify(jsonData));
+        }
       } catch (error) {
         throw Error("updateProjectDirJson throw error : " + error);
       }
@@ -347,7 +410,7 @@ var TemplateTools = /*#__PURE__*/function () {
   }, {
     key: "serachJSON",
     value: function serachJSON(jsonData, key, type) {
-      var _this4 = this;
+      var _this5 = this;
 
       // 如果是文件夹
       if (jsonData.isDir) {
@@ -362,7 +425,7 @@ var TemplateTools = /*#__PURE__*/function () {
 
         if (jsonData.children.length > 0) {
           jsonData.children.forEach(function (obj) {
-            _this4.serachJSON(obj, key, type);
+            _this5.serachJSON(obj, key, type);
           });
         }
       } else {
@@ -735,7 +798,8 @@ var CodeGenerator = /*#__PURE__*/function () {
   _createClass(CodeGenerator, [{
     key: "init",
     value: function init(params) {
-      console.log("暂未开发，请等待!");
+      var tools = new TemplateTools(this.project);
+      tools.init();
     }
   }, {
     key: "generatorPojo",
@@ -825,6 +889,12 @@ var CodeGenerator = /*#__PURE__*/function () {
         tableComment: tableCnName,
         tableCloums: tableColArr
       };
+    }
+  }, {
+    key: "updateProjectConfig",
+    value: function updateProjectConfig() {
+      var tools = new TemplateTools(this.project);
+      tools.updateProjectDirJson();
     }
   }]);
 
