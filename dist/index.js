@@ -254,8 +254,7 @@
       value: function replaceStructure(structure) {
         var _this2 = this;
 
-        path__default["default"].sep; // TODO: 测试windows平台是否效果一致
-
+        // TODO: 测试windows平台是否效果一致
         var releasePath = this.project.projectDir;
         var fromPath = structure.path;
         structure.fromPath = fromPath;
@@ -472,8 +471,8 @@
        */
 
     }, {
-      key: "updateProjectDirJson",
-      value: function updateProjectDirJson() {
+      key: "updateProjectConfig",
+      value: function updateProjectConfig() {
         try {
           if (fs__default["default"].existsSync(this.configPath)) {
             var configJSON = this.getJsonFromPath(true);
@@ -481,7 +480,7 @@
             return configJSON;
           }
         } catch (error) {
-          throw Error("updateProjectDirJson throw error : " + error);
+          throw Error("updateProjectConfig throw error : " + error);
         }
       }
       /**
@@ -957,7 +956,7 @@
       key: "updateProjectConfig",
       value: function updateProjectConfig() {
         var tools = new TemplateTools(this.project);
-        return tools.updateProjectDirJson();
+        return tools.updateProjectConfig();
       }
     }]);
 
