@@ -12,9 +12,27 @@ export const EXCLUDE_PATH = parseIgnore(
 );
 /** Java文件后缀 */
 export const FILE_SUFFIX = ".java";
-/** 生成xml后缀 */
-export const MAPPER_SUFFIX = "Mapper.xml";
 
+/**
+ * 根据 _ 生成驼峰 , type 默认true 首字母大写,如果没有 _ 分隔符 , 则取第一个大写
+ * @param {*} str
+ */
+export const tranformHumpStr = (str: string, type = true) => {
+  if (str.length === 0) {
+    return "";
+  }
+  if (str.indexOf("_") >= 0) {
+    let strArr = str.split("_");
+    strArr = strArr.map((ele) => {
+      return ele.charAt(0).toUpperCase() + ele.substring(1).toLowerCase();
+    });
+    const result = strArr.join("");
+    return type ? result : result.charAt(0).toLowerCase() + result.substring(1);
+  }
+  return type
+    ? str.charAt(0).toUpperCase() + str.substring(1).toLowerCase()
+    : str;
+};
 /**
  * 根据文件路径获取包名
  * @param filePath 文件路径
@@ -86,7 +104,10 @@ export class TemplateTools {
       JSON.stringify(projectConfig)
     );
   }
-
+  /**
+   * 替换掉目录结构
+   * @param structure 项目目录结构
+   */
   replaceStructure(structure: CodeFaster.ConfigJSON) {
     const sep = path.sep;
     // TODO: 测试windows平台是否效果一致
@@ -322,18 +343,18 @@ export class TemplateTools {
   }
 
   /**
-   * 更新项目结构
+   * 更新项目目录结构
    */
   updateProjectDirJson() {
     try {
       if (fs.existsSync(this.configPath)) {
-        const jsonData: CodeFaster.ConfigJSON = this.getJsonFromPath(true);
-        fs.writeFileSync(this.configPath, JSON.stringify(jsonData));
+        const configJSON: CodeFaster.ConfigJSON = this.getJsonFromPath(true);
+        fs.writeFileSync(this.configPath, JSON.stringify(configJSON));
+        return configJSON;
       }
     } catch (error: unknown) {
       throw Error("updateProjectDirJson throw error : " + error);
     }
-    return true;
   }
 
   /**
@@ -373,27 +394,5 @@ export class TemplateTools {
         });
       }
     }
-  }
-  /**
-   * 根据 _ 生成驼峰 , type 默认true 首字母大写,如果没有 _ 分隔符 , 则取第一个大写
-   * @param {*} str
-   */
-  tranformHumpStr(str: string, type = true) {
-    if (str.length === 0) {
-      return "";
-    }
-    if (str.indexOf("_") >= 0) {
-      let strArr = str.split("_");
-      strArr = strArr.map((ele) => {
-        return ele.charAt(0).toUpperCase() + ele.substring(1).toLowerCase();
-      });
-      const result = strArr.join("");
-      return type
-        ? result
-        : result.charAt(0).toLowerCase() + result.substring(1);
-    }
-    return type
-      ? str.charAt(0).toUpperCase() + str.substring(1).toLowerCase()
-      : str;
   }
 }

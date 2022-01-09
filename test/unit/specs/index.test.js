@@ -52,7 +52,7 @@ describe("TemplateTools", () => {
   it("updateProjectDirJson should work", () => {
     const tools = new TemplateTools(project);
     const obj = tools.updateProjectDirJson();
-    expect(obj).toBe(true);
+    expect(obj.children).toHaveLength(10);
   });
 
   it("fileDisplay should work", () => {

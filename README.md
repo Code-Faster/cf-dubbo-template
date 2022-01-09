@@ -2,6 +2,35 @@
 
 code-faster 模版项目，技术栈为 spring boot、dubbo、nacos、redis、mongodb、mysql
 
+### 项目 GUI 地址，提供基于任意语言任意模版的 项目CURD 生成以及测试部署一体化
+
+https://github.com/code-faster/code-faster
+
+## src/index.ts 对外提供以下功能
+
+```
+// 初始化项目
+init: (params: CodeFaster.Params) => void;
+// 更新项目config结构，并返回结构JSON
+updateProjectConfig: () => CodeFaster.ConfigJSON | undefined;
+// 根据参数生成POJO
+generatorPojo: (params: CodeFaster.Params) => void;
+// 根据参数生成VO
+generatorVO: (params: CodeFaster.Params) => void;
+// 根据参数生成Service层
+generatorService: (params: CodeFaster.Params) => void;
+// 根据参数生成ServiceImpl层
+generatorServiceImpl: (params: CodeFaster.Params) => void;
+// 根据参数生成Controller层
+generatorController: (params: CodeFaster.Params) => void;
+// 根据参数生成Mapper层
+generatorMapper: (params: CodeFaster.Params) => void;
+// 根据参数生成单元测试
+generatorUnitTest: (params: CodeFaster.Params) => void;
+// 根据POJO路径返回模型类JSON
+getModelByPojoPath: (filePath: string) => CodeFaster.SqlTable;
+```
+
 ## 如何发布自己的模版
 
 ### 自定义区域

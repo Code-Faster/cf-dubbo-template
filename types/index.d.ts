@@ -81,8 +81,8 @@ declare namespace CodeFaster {
   interface CodeGenerator {
     /** 公用方法：初始化项目 */
     init: (params: CodeFaster.Params) => void;
-    /** 公用方法：更新项目配置文件 */
-    updateProjectConfig: () => void;
+    /** 公用方法：更新项目配置文件，并返回项目结构 */
+    updateProjectConfig: () => CodeFaster.ConfigJSON | undefined;
   }
   /**
    * Java生成器，Java模版私有化方法

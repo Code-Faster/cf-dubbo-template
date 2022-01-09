@@ -146,6 +146,6 @@ export default class CodeGenerator implements CodeFaster.JavaCodeGenerator {
 
   updateProjectConfig() {
     const tools = new TemplateTools(this.project);
-    tools.updateProjectDirJson();
+    return tools.updateProjectDirJson();
   }
 }

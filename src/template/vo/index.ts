@@ -1,4 +1,9 @@
-import { FILE_SUFFIX, getPackageName, TemplateTools } from "../index";
+import {
+  FILE_SUFFIX,
+  getPackageName,
+  TemplateTools,
+  tranformHumpStr,
+} from "../index";
 import fs from "fs";
 import path from "path";
 
@@ -25,7 +30,7 @@ export default function (
 
   const now = new Date();
   // 类名
-  const pojoClassName = tools.tranformHumpStr(params.model.tableName);
+  const pojoClassName = tranformHumpStr(params.model.tableName);
 
   const template = `
 package ${getPackageName(params.releasePath, "com")};
