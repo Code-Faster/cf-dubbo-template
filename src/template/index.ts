@@ -3,7 +3,7 @@ import fs from "fs";
 import parseIgnore from "parse-gitignore";
 /** 配置文件默认名称 */
 export const TEMPLATE_JSON = "cfconfig.json";
-const TEMPLATE_DIR = path.join(__dirname, "../../playground/createTemplate");
+const TEMPLATE_DIR = path.join(process.cwd(), "./playground/createTemplate");
 /** 静态目录模版目录名 */
 export const TEMPLATE_MODEL_NAME = "createTemplate";
 /** 忽略的文件 */

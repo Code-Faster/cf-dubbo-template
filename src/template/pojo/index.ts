@@ -83,8 +83,6 @@ public class ${pojoClassName} implements Serializable {
       .join("")}
 }
     `;
-
-  console.log("执行了", params.releasePath);
   fs.writeFileSync(
     path.join(params.releasePath, pojoClassName + FILE_SUFFIX),
     template

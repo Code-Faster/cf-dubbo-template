@@ -30,7 +30,7 @@
     "commit-msg": "node scripts/verifyCommitMsg.js"
   },
   "scripts": {
-    "dev": "node examples/server.js",
+    "dev": "node dist/index.common.js",
     "dev:dist": "rollup -wm -c build/rollup.dev.config.js",
     "build": "node build/build.js",
     "lint": "eslint src examples test",
@@ -63,14 +63,14 @@
     "rollup-plugin-typescript2": "^0.31.1",
     "terser": "^5.10.0",
     "typescript": "^4.5.2",
-    "vuepress": "^1.8.2"
+    "vuepress": "^1.8.2",
+    "conventional-changelog-cli": "^2.1.1"
   },
   "bugs": {
     "url": "https://github.com/Code-Faster/codefaster-dubbo-template/issues"
   },
   "homepage": "https://github.com/Code-Faster/codefaster-dubbo-template#readme",
   "dependencies": {
-    "conventional-changelog-cli": "^2.1.1",
     "parse-gitignore": "^1.0.1"
   }
 }
