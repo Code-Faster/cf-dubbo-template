@@ -26,7 +26,7 @@ export default function (
    */
   const tools = new TemplateTools(project);
 
-  tools.updateProjectDirJson();
+  tools.updateProjectConfig();
 
   const now = new Date();
   // 类名

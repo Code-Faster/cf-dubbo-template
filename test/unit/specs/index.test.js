@@ -49,9 +49,9 @@ describe("TemplateTools", () => {
     expect(obj.children).toHaveLength(10);
   });
 
-  it("updateProjectDirJson should work", () => {
+  it("updateProjectConfig should work", () => {
     const tools = new TemplateTools(project);
-    const obj = tools.updateProjectDirJson();
+    const obj = tools.updateProjectConfig();
     expect(obj.children).toHaveLength(10);
   });
 

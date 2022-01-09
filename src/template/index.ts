@@ -3,7 +3,12 @@ import fs from "fs";
 import parseIgnore from "parse-gitignore";
 /** 配置文件默认名称 */
 export const TEMPLATE_JSON = "cfconfig.json";
-const TEMPLATE_DIR = path.join(process.cwd(), "./playground/createTemplate");
+const __PRODUCTION__ = false;
+let TEMPLATE_DIR = path.join(process.cwd(), "./playground/createTemplate");
+// 实现build时候替换参数
+if (__PRODUCTION__ === true) {
+  TEMPLATE_DIR = path.join(__dirname, "./playground/createTemplate");
+}
 /** 静态目录模版目录名 */
 export const TEMPLATE_MODEL_NAME = "createTemplate";
 /** 忽略的文件 */
@@ -260,7 +265,7 @@ export class TemplateTools {
       const isFile = stats.isFile(); // 是文件
       const isDir = stats.isDirectory(); // 是文件夹
       const isExcludeFlag = EXCLUDE_PATH.filter((ele) => {
-        return filedir.indexOf(ele) >= 0;
+        return fileName.includes(ele); // 注意不能使用路径，因为可能在GUI里包含到忽略文件
       });
       if (isExcludeFlag.length > 0) {
         return;
