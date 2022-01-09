@@ -109,7 +109,6 @@ export class TemplateTools {
    * @param structure 项目目录结构
    */
   replaceStructure(structure: CodeFaster.ConfigJSON) {
-    const sep = path.sep;
     // TODO: 测试windows平台是否效果一致
     const releasePath = this.project.projectDir;
     let fromPath = structure.path;
@@ -345,7 +344,7 @@ export class TemplateTools {
   /**
    * 更新项目目录结构
    */
-  updateProjectDirJson() {
+  updateProjectConfig() {
     try {
       if (fs.existsSync(this.configPath)) {
         const configJSON: CodeFaster.ConfigJSON = this.getJsonFromPath(true);
@@ -353,7 +352,7 @@ export class TemplateTools {
         return configJSON;
       }
     } catch (error: unknown) {
-      throw Error("updateProjectDirJson throw error : " + error);
+      throw Error("updateProjectConfig throw error : " + error);
     }
   }
 
