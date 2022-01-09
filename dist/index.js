@@ -1,5 +1,5 @@
 /*!
-  * code-dubbo-template v0.0.15
+  * code-dubbo-template v0.0.16
   * (c) 2022 biqi li
   * @license MIT
   */
