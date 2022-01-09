@@ -58,8 +58,8 @@ declare namespace CodeFaster {
     type?: number;
     /** 简介 */
     description?: string;
-    /** 项目模版 */
-    templateId?: number;
+    /** 项目模版名称，要唯一 */
+    templateName: string;
 
     /** Java项目详细参数 */
     defaultPojoPath?: string;
@@ -69,6 +69,11 @@ declare namespace CodeFaster {
     defaultControllerPath?: string;
     defaultMapperPath?: string;
     defaultUnitTestPath?: string;
+
+    /** 部署相关信息 */
+    testWebhook?: string;
+    prePublishWebhook?: string;
+    publishWebhook?: string;
   }
   /**
    * 代码生成器

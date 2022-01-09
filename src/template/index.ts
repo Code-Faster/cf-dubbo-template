@@ -52,12 +52,12 @@ export const getSetFormat = (str: string) => {
 export class TemplateTools {
   private project: CodeFaster.Project = {
     owner: "",
-    templateId: 0,
     // 目录最终路径
     projectDir: "",
     projectName: "",
     type: 1,
     description: "",
+    templateName: "",
   };
   private keyPathArr: Array<any> = [];
   // 配置文件路径
@@ -168,6 +168,9 @@ export class TemplateTools {
         // 重新生成
         jsonData.path = path.parse(configPath).dir;
         if (jsonData.project && jsonData.project !== undefined) {
+          if (this.project) {
+            jsonData.project = { ...this.project };
+          }
           // buildPath 去除项目名称
           const arr = path.parse(configPath).dir.split(path.sep);
           jsonData.project.projectDir = arr.join(path.sep);

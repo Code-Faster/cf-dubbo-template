@@ -42,6 +42,13 @@ describe("TemplateTools", () => {
     const tools = new TemplateTools(project);
     tools.init();
   });
+
+  it("getJsonFromPath should work", () => {
+    const tools = new TemplateTools(project);
+    const obj = tools.getJsonFromPath(true);
+    expect(obj.children).toHaveLength(10);
+  });
+
   it("updateProjectDirJson should work", () => {
     const tools = new TemplateTools(project);
     const obj = tools.updateProjectDirJson();
@@ -54,13 +61,6 @@ describe("TemplateTools", () => {
     // console.log(templateObj);
     expect(templateObj.children.length).toBe(10);
   });
-
-  it("getJsonFromPath should work", () => {
-    const tools = new TemplateTools(project);
-    const obj = tools.getJsonFromPath(true);
-    expect(obj.children).toHaveLength(10);
-  });
-
   it("findOneFileByKey should work", () => {
     const tools = new TemplateTools(project);
     const obj = tools.findOneFileByKey("PersonServiceImpl.java");

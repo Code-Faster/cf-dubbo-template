@@ -20,7 +20,6 @@ export default function (
    * 获取模版工具类
    */
   const tools = new TemplateTools(project);
-
   tools.updateProjectDirJson();
 
   const now = new Date();
@@ -58,7 +57,7 @@ import lombok.Data;
 @Entity(name = "${params.model.tableName}")
 ${
   params.model.tableComment &&
-  "@ApiModel(value = \"" + params.model.tableComment + "\")"
+  '@ApiModel(value = "' + params.model.tableComment + '")'
 }
 @SuppressWarnings("serial")
 public class ${pojoClassName} implements Serializable {
@@ -79,6 +78,8 @@ public class ${pojoClassName} implements Serializable {
       .join("")}
 }
     `;
+
+  console.log("执行了", params.releasePath);
   fs.writeFileSync(
     path.join(params.releasePath, pojoClassName + FILE_SUFFIX),
     template

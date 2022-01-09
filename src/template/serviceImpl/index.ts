@@ -36,6 +36,7 @@ export default function (
    * 获取模版工具类
    */
   const tools = new TemplateTools(project);
+  tools.updateProjectDirJson();
 
   tools.updateProjectDirJson();
 
