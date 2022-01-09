@@ -1,5 +1,5 @@
 /*!
-  * code-dubbo-template v0.0.13
+  * code-dubbo-template v0.0.14
   * (c) 2022 biqi li
   * @license MIT
   */
@@ -14,6 +14,44 @@
   var path__default = /*#__PURE__*/_interopDefaultLegacy(path);
   var fs__default = /*#__PURE__*/_interopDefaultLegacy(fs);
   var parseIgnore__default = /*#__PURE__*/_interopDefaultLegacy(parseIgnore);
+
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+
+      if (enumerableOnly) {
+        symbols = symbols.filter(function (sym) {
+          return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+        });
+      }
+
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+
+      if (i % 2) {
+        ownKeys(Object(source), true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(Object(source)).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+      }
+    }
+
+    return target;
+  }
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -37,6 +75,21 @@
     return Constructor;
   }
 
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
   /** 配置文件默认名称 */
 
   var TEMPLATE_JSON = "cfconfig.json";
@@ -50,6 +103,29 @@
   /** Java文件后缀 */
 
   var FILE_SUFFIX = ".java";
+  /**
+   * 根据 _ 生成驼峰 , type 默认true 首字母大写,如果没有 _ 分隔符 , 则取第一个大写
+   * @param {*} str
+   */
+
+  var tranformHumpStr = function tranformHumpStr(str) {
+    var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+    if (str.length === 0) {
+      return "";
+    }
+
+    if (str.indexOf("_") >= 0) {
+      var strArr = str.split("_");
+      strArr = strArr.map(function (ele) {
+        return ele.charAt(0).toUpperCase() + ele.substring(1).toLowerCase();
+      });
+      var result = strArr.join("");
+      return type ? result : result.charAt(0).toLowerCase() + result.substring(1);
+    }
+
+    return type ? str.charAt(0).toUpperCase() + str.substring(1).toLowerCase() : str;
+  };
   /**
    * 根据文件路径获取包名
    * @param filePath 文件路径
@@ -92,12 +168,12 @@
 
       this.project = {
         owner: "",
-        templateId: 0,
         // 目录最终路径
         projectDir: "",
         projectName: "",
         type: 1,
-        description: ""
+        description: "",
+        templateName: ""
       };
       this.keyPathArr = []; // 配置文件路径
 
@@ -125,7 +201,11 @@
             jsonData.path = path__default["default"].parse(configPath).dir;
 
             if (jsonData.project && jsonData.project !== undefined) {
-              // buildPath 去除项目名称
+              if (_this.project) {
+                jsonData.project = _objectSpread2({}, _this.project);
+              } // buildPath 去除项目名称
+
+
               var arr = path__default["default"].parse(configPath).dir.split(path__default["default"].sep);
               jsonData.project.projectDir = arr.join(path__default["default"].sep);
             } else {
@@ -164,6 +244,11 @@
 
         fs__default["default"].writeFileSync(path__default["default"].join(this.project.projectDir, TEMPLATE_JSON), JSON.stringify(projectConfig));
       }
+      /**
+       * 替换掉目录结构
+       * @param structure 项目目录结构
+       */
+
     }, {
       key: "replaceStructure",
       value: function replaceStructure(structure) {
@@ -383,7 +468,7 @@
         };
       }
       /**
-       * 更新项目结构
+       * 更新项目目录结构
        */
 
     }, {
@@ -391,14 +476,13 @@
       value: function updateProjectDirJson() {
         try {
           if (fs__default["default"].existsSync(this.configPath)) {
-            var jsonData = this.getJsonFromPath(true);
-            fs__default["default"].writeFileSync(this.configPath, JSON.stringify(jsonData));
+            var configJSON = this.getJsonFromPath(true);
+            fs__default["default"].writeFileSync(this.configPath, JSON.stringify(configJSON));
+            return configJSON;
           }
         } catch (error) {
           throw Error("updateProjectDirJson throw error : " + error);
         }
-
-        return true;
       }
       /**
        * 根据文档结构json 迭代出匹配关键字地址
@@ -445,31 +529,6 @@
           }
         }
       }
-      /**
-       * 根据 _ 生成驼峰 , type 默认true 首字母大写,如果没有 _ 分隔符 , 则取第一个大写
-       * @param {*} str
-       */
-
-    }, {
-      key: "tranformHumpStr",
-      value: function tranformHumpStr(str) {
-        var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
-        if (str.length === 0) {
-          return "";
-        }
-
-        if (str.indexOf("_") >= 0) {
-          var strArr = str.split("_");
-          strArr = strArr.map(function (ele) {
-            return ele.charAt(0).toUpperCase() + ele.substring(1).toLowerCase();
-          });
-          var result = strArr.join("");
-          return type ? result : result.charAt(0).toLowerCase() + result.substring(1);
-        }
-
-        return type ? str.charAt(0).toUpperCase() + str.substring(1).toLowerCase() : str;
-      }
     }]);
 
     return TemplateTools;
@@ -496,7 +555,7 @@
     tools.updateProjectDirJson();
     var now = new Date(); // 类名
 
-    var pojoClassName = tools.tranformHumpStr(params.model.tableName);
+    var pojoClassName = tranformHumpStr(params.model.tableName);
     var template = "\npackage ".concat(getPackageName(params.releasePath, "com"), ";\n\nimport java.io.Serializable;\nimport javax.persistence.*;\n\n").concat(params.model.tableCloums.map(function (ele) {
       if (ele.columnType == "Date") {
         return "import java.util.Date;";
@@ -505,13 +564,14 @@
       } else if (ele.columnType == "BigDecimal") {
         return "import java.math.BigDecimal;";
       } else { return ""; }
-    }).join(""), "\n\nimport io.swagger.annotations.ApiModelProperty;\nimport io.swagger.annotations.ApiModel;\nimport lombok.Data;\n\n/**\n * @author ").concat(author, "\n * @version V${app.service.version}\n * @date: ").concat(now, "\n */\n@Data\n@Entity(name = \"").concat(params.model.tableName, "\")\n").concat(params.model.tableComment && "@ApiModel(value = \"" + params.model.tableComment + "\")", "\n@SuppressWarnings(\"serial\")\npublic class ").concat(pojoClassName, " implements Serializable {\n    ").concat(params.model.tableCloums.map(function (ele) {
+    }).join(""), "\n\nimport io.swagger.annotations.ApiModelProperty;\nimport io.swagger.annotations.ApiModel;\nimport lombok.Data;\n\n/**\n * @author ").concat(author, "\n * @version V${app.service.version}\n * @date: ").concat(now, "\n */\n@Data\n@Entity(name = \"").concat(params.model.tableName, "\")\n").concat(params.model.tableComment && '@ApiModel(value = "' + params.model.tableComment + '")', "\n@SuppressWarnings(\"serial\")\npublic class ").concat(pojoClassName, " implements Serializable {\n    ").concat(params.model.tableCloums.map(function (ele) {
       if ("id" === ele.columnName) {
         return "\n    @Id\n    @ApiModelProperty(value = \"".concat(ele.columnComment, "\")\n    private ").concat(ele.columnType, " ").concat(ele.columnName, ";\n          ");
       }
 
       return "\n    @ApiModelProperty(value = \"".concat(ele.columnComment, "\")\n    private ").concat(ele.columnType, " ").concat(ele.columnName, ";\n    ");
     }).join(""), "\n}\n    ");
+    console.log("执行了", params.releasePath);
     fs__default["default"].writeFileSync(path__default["default"].join(params.releasePath, pojoClassName + FILE_SUFFIX), template);
   }
 
@@ -536,7 +596,7 @@
     tools.updateProjectDirJson();
     var now = new Date(); // 类名
 
-    var pojoClassName = tools.tranformHumpStr(params.model.tableName);
+    var pojoClassName = tranformHumpStr(params.model.tableName);
     var template = "\npackage ".concat(getPackageName(params.releasePath, "com"), ";\n\nimport ").concat(tools.getPackageNameByFileName(pojoClassName + FILE_SUFFIX), ";\n\nimport java.io.Serializable;\n\nimport io.swagger.annotations.ApiModel;\nimport ").concat(tools.getPackageNameByFileName("PageParameter" + FILE_SUFFIX), ";\nimport io.swagger.annotations.ApiModelProperty;\nimport lombok.Data;\n\n/**\n * @author ").concat(author, "\n * @version V${app.service.version}\n * @date: ").concat(now, "\n */\n@Data\n@ApiModel(value = \"").concat(params.model.tableComment, "\")\n@SuppressWarnings(\"serial\")\npublic class ").concat(pojoClassName, "VO extends ").concat(pojoClassName, " implements Serializable {\n    @ApiModelProperty(value = \"ID\u96C6\u5408\uFF0C\u9017\u53F7\u5206\u9694\")\n    private String ids;\n    @ApiModelProperty(value = \"\u5F53\u524D\u9875\")\n    private Integer page;\n    @ApiModelProperty(value = \"\u6BCF\u9875\u7684\u6761\u6570\")\n    private Integer rows;\n    @ApiModelProperty(value = \"\u5206\u9875\u53C2\u6570\")\n    private PageParameter pageParameter;\n    @ApiModelProperty(value = \"\u5217\")\n    private String column;\n}\n    ");
     fs__default["default"].writeFileSync(path__default["default"].join(params.releasePath, pojoClassName + "VO" + FILE_SUFFIX), template);
   }
@@ -614,6 +674,7 @@
      */
 
     var tools = new TemplateTools(project);
+    tools.updateProjectDirJson();
     var serviceName = pojo + "Service";
     var now = new Date(); // 获取ID的类型
 
@@ -664,6 +725,7 @@
 
     var tools = new TemplateTools(project);
     tools.updateProjectDirJson();
+    tools.updateProjectDirJson();
     var now = new Date();
     var serviceName = pojo + "Service";
     var serviceImplName = pojo + "ServiceImpl"; // 获取ID的类型
@@ -706,6 +768,7 @@
      */
 
     var tools = new TemplateTools(project);
+    tools.updateProjectDirJson();
     var tableColArr = params.model.tableCloums;
     var now = new Date();
     var serviceName = pojo + "Service";
@@ -761,6 +824,7 @@
      */
 
     var tools = new TemplateTools(project);
+    tools.updateProjectDirJson();
     var now = new Date();
     var serviceName = pojo + "Service";
     var serviceNameVariable = getParamVariableFormat$2(serviceName);
@@ -894,7 +958,7 @@
       key: "updateProjectConfig",
       value: function updateProjectConfig() {
         var tools = new TemplateTools(this.project);
-        tools.updateProjectDirJson();
+        return tools.updateProjectDirJson();
       }
     }]);
 
