@@ -1,5 +1,5 @@
 /*!
-  * code-dubbo-template v0.0.14
+  * code-dubbo-template v0.0.15
   * (c) 2022 biqi li
   * @license MIT
   */
@@ -93,7 +93,7 @@ function _defineProperty(obj, key, value) {
 /** 配置文件默认名称 */
 
 var TEMPLATE_JSON = "cfconfig.json";
-var TEMPLATE_DIR = path__default["default"].join(__dirname, "../../playground/createTemplate");
+var TEMPLATE_DIR = path__default["default"].join(process.cwd(), "./playground/createTemplate");
 /** 静态目录模版目录名 */
 
 var TEMPLATE_MODEL_NAME = "createTemplate";
@@ -571,7 +571,6 @@ function pojo (project, params) {
 
     return "\n    @ApiModelProperty(value = \"".concat(ele.columnComment, "\")\n    private ").concat(ele.columnType, " ").concat(ele.columnName, ";\n    ");
   }).join(""), "\n}\n    ");
-  console.log("执行了", params.releasePath);
   fs__default["default"].writeFileSync(path__default["default"].join(params.releasePath, pojoClassName + FILE_SUFFIX), template);
 }
 
