@@ -57,16 +57,20 @@ function genConfig(opts) {
     input: {
       input: resolve("src/index.ts"),
       plugins: [
+        replace({
+          values: { __PRODUCTION__: JSON.stringify(true) },
+          preventAssignment: true,
+        }),
         copy({
           targets: [
             {
               src: "playground/createTemplate",
               dest: "dist/playground/",
-            },{
-
+            },
+            {
               src: "src/template/.cfignore",
               dest: "dist/",
-            }
+            },
           ],
         }),
         typescript(),
