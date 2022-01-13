@@ -22,6 +22,9 @@ function readFile(filePath: string): string {
 export default class CodeGenerator implements CodeFaster.JavaCodeGenerator {
   project: CodeFaster.Project;
   constructor(project: CodeFaster.Project) {
+    if (project.type !== 1) {
+      throw Error("模版类型不一致");
+    }
     this.project = project;
   }
 

@@ -54,7 +54,7 @@ declare namespace CodeFaster {
     projectDir: string;
     /** 作者 */
     owner?: string;
-    /** 语言类型 1、Java 2、JavaScript */
+    /** 项目类型 1、Java【后台】 2、Admin【管理系统】 3、Web【含PC、H5、小程序】 4、App【Android、ios】 */
     type?: number;
     /** 简介 */
     description?: string;

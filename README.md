@@ -2,7 +2,7 @@
 
 code-faster 模版项目，技术栈为 spring boot、dubbo、nacos、redis、mongodb、mysql
 
-### 项目 GUI 地址，提供基于任意语言任意模版的 项目CURD 生成以及测试部署一体化
+### 项目 GUI 地址，提供基于任意语言任意模版的 项目 CURD 生成以及测试部署一体化
 
 https://github.com/code-faster/code-faster
 
@@ -52,11 +52,14 @@ getModelByPojoPath: (filePath: string) => CodeFaster.SqlTable;
 
 模版名称，以 codefaster-开始，以-template 结束
 
-#### keywords 第一个关键词将作为模版标记的语言类型，例如：
+#### keywords 第一个关键词将作为模版标记的项目类型，例如：
 
 ```
-1、java
-2、javaScript
+1、Java【后台】
+2、Admin【管理系统】
+3、Web【含PC、H5、小程序】
+4、App【Android、ios】
+5、扩展更多语法
 ```
 
 #### description
