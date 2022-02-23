@@ -1,5 +1,5 @@
 /*!
-  * code-dubbo-template v0.0.18
+  * code-dubbo-template v0.0.19
   * (c) 2022 biqi li
   * @license MIT
   */
@@ -314,9 +314,9 @@ var TemplateTools = /*#__PURE__*/function () {
   }, {
     key: "showStructure",
     value: function showStructure(project) {
-      var dir_structure = this.getInitConfig(project);
-      this.fileDisplay(dir_structure);
-      return dir_structure;
+      var dirStructure = this.getInitConfig(project);
+      this.fileDisplay(dirStructure);
+      return dirStructure;
     }
     /**
      * 拷贝模版代码，复制模版代码，内部做关键字替换
@@ -411,7 +411,8 @@ var TemplateTools = /*#__PURE__*/function () {
             path: filedir,
             sortPath: (_fileObj$project3 = fileObj.project) !== null && _fileObj$project3 !== void 0 && _fileObj$project3.projectDir ? path.relative((_fileObj$project4 = fileObj.project) === null || _fileObj$project4 === void 0 ? void 0 : _fileObj$project4.projectDir, filedir) : fileName,
             isDir: isDir,
-            children: []
+            children: [],
+            project: fileObj.project
           }; // 根据 fileObj 判读缓存数据 是否存在父亲目录
 
           var dirArr = fileObj.children.filter(function (ele) {
@@ -850,6 +851,10 @@ function readFile(filePath) {
 var CodeGenerator = /*#__PURE__*/function () {
   function CodeGenerator(project) {
     _classCallCheck(this, CodeGenerator);
+
+    if (project.type !== 1) {
+      throw Error("模版类型不一致");
+    }
 
     this.project = project;
   }
