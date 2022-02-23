@@ -210,9 +210,9 @@ export class TemplateTools {
   };
 
   showStructure(project: CodeFaster.Project): CodeFaster.ConfigJSON {
-    let dir_structure: CodeFaster.ConfigJSON = this.getInitConfig(project);
-    this.fileDisplay(dir_structure);
-    return dir_structure;
+    let dirStructure: CodeFaster.ConfigJSON = this.getInitConfig(project);
+    this.fileDisplay(dirStructure);
+    return dirStructure;
   }
   /**
    * 拷贝模版代码，复制模版代码，内部做关键字替换
@@ -300,6 +300,7 @@ export class TemplateTools {
             : fileName,
           isDir,
           children: [],
+          project: fileObj.project
         };
         // 根据 fileObj 判读缓存数据 是否存在父亲目录
         const dirArr = fileObj.children.filter((ele: any) => {
