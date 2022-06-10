@@ -163,8 +163,7 @@ public class ${e2eName} {
         Grid find${pojo}Page = ${serviceNameVariable}.find${pojo}Page(${voVariable});
         logger.error("find${pojo}Page ------ " + JSON.toJSONString(find${pojo}Page));
     }
-}
-      `;
+}`;
   fs.writeFileSync(
     path.join(params.releasePath, e2eName + FILE_SUFFIX),
     template

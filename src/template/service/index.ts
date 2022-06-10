@@ -116,8 +116,7 @@ public interface ${serviceName} extends MybatisDao {
      * @return
      */
     Grid<${vo}> find${pojo}Page (${vo} ${voVariable})throws BusinessException;
-}
-`;
+}`;
   fs.writeFileSync(
     path.join(params.releasePath, serviceName + FILE_SUFFIX),
     template

@@ -44,11 +44,6 @@ import ${tools.getPackageNameByFileName("PageParameter" + FILE_SUFFIX)};
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-/**
- * @author ${author}
- * @version V\${app.service.version}
- * @date: ${now}
- */
 @Data
 @ApiModel(value = "${params.model.tableComment}")
 @SuppressWarnings("serial")
@@ -63,8 +58,7 @@ public class ${pojoClassName}VO extends ${pojoClassName} implements Serializable
     private PageParameter pageParameter;
     @ApiModelProperty(value = "列")
     private String column;
-}
-    `;
+}`;
   fs.writeFileSync(
     path.join(params.releasePath, pojoClassName + "VO" + FILE_SUFFIX),
     template

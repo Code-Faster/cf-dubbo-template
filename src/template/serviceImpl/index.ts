@@ -183,8 +183,7 @@ public class ${
       grid.setList(list);
       return grid;
     }
-}
-    `;
+}`;
   fs.writeFileSync(
     path.join(params.releasePath, serviceImplName + FILE_SUFFIX),
     template

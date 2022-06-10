@@ -53,11 +53,6 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
-/**
- * @author ${author}
- * @version V\${app.service.version}
- * @date: ${now}
- */
 @Data
 @Entity(name = "${params.model.tableName}")
 ${
@@ -81,8 +76,7 @@ public class ${pojoClassName} implements Serializable {
     `;
       })
       .join("")}
-}
-    `;
+}`;
   fs.writeFileSync(
     path.join(params.releasePath, pojoClassName + FILE_SUFFIX),
     template

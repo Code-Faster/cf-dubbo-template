@@ -76,8 +76,7 @@ export default function (
   <select id="find${pojo}Page" resultMap="${voVariable}" parameterMap="${voVariable}">
       SELECT * FROM ${params.model.tableName} WHERE 1=1 ORDER BY ID ASC
   </select>
-</mapper>
-  `;
+</mapper>`;
 
   fs.writeFileSync(path.join(params.releasePath, mapperName), template);
 }

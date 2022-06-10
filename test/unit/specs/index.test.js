@@ -5,7 +5,7 @@ const project = {
   projectName: "test",
   projectDir: path.join(__dirname, "../../../playground/test"),
   owner: "Code Faster",
-  type: "1",
+  type: 1,
   templateId: 1,
   description: "Code Faster createTemplate",
   id: 1,
